@@ -1,0 +1,6 @@
+[Monitor]
+excludeserver = 0
+maxnodes = 4
+localhost = 1
+timestep = 20
+interval = 1

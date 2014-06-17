@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test.TestConfigure &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for test.TestConfigure</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Modulo che effettua il processo di Testing sul codice del progetto.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">Configure</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="TestConfigure"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure">[docs]</a><span class="k">class</span> <span class="nc">TestConfigure</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Classe che controlla il modulo di gestione della Configurazione</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestConfigure.setUp"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure.setUp">[docs]</a>	<span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ExcludeServer</span> 	<span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">MaxNodes</span> 		<span class="o">=</span> <span class="mi">4</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">LocalhostOnly</span>	<span class="o">=</span> <span class="mi">1</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">TimeStep</span> 		<span class="o">=</span> <span class="mi">20</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">Interval</span> 		<span class="o">=</span> <span class="mi">1</span> 
+</div>
+<div class="viewcode-block" id="TestConfigure.testIO"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure.testIO">[docs]</a>	<span class="k">def</span> <span class="nf">testIO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la coerenza dei dati in lettura/scrittura della configurazione</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">ExcludeServer</span> 	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ExcludeServer</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span> 		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MaxNodes</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">LocalhostOnly</span>		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LocalhostOnly</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">TimeStep</span> 		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TimeStep</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">Interval</span> 		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Interval</span> 
+		<span class="n">Configure</span><span class="o">.</span><span class="n">SaveConfig</span><span class="p">(</span><span class="n">NewFile</span> 	<span class="o">=</span> <span class="s">&quot;/tmp/test.ini&quot;</span><span class="p">)</span>
+
+		<span class="n">Configure</span><span class="o">.</span><span class="n">LoadConfig</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">ExcludeServer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ExcludeServer</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span><span class="p">,</span>	  <span class="bp">self</span><span class="o">.</span><span class="n">MaxNodes</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">LocalhostOnly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LocalhostOnly</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>	  <span class="bp">self</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">Interval</span><span class="p">,</span>	  <span class="bp">self</span><span class="o">.</span><span class="n">Interval</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestConfigure.testMeth"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure.testMeth">[docs]</a>	<span class="k">def</span> <span class="nf">testMeth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la completezza della implementazione dei metodi all&#39;interno del Modulo</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c"># Test di Coerenza Funzionale. Controllo se il metodo della classe, sottoposto ad input validi, risponde secondo specifica</span>
+		<span class="k">def</span> <span class="nf">testMeth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">LoadConfig</span><span class="p">),</span> <span class="s">&quot;Metodo &quot;&quot;LoadConfig&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">SaveConfig</span><span class="p">),</span> <span class="s">&quot;Metodo &quot;&quot;SaveConfig&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestConfigure.testStr"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure.testStr">[docs]</a>	<span class="k">def</span> <span class="nf">testStr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la correttezza del tipo immesso da una opzione</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Configure</span><span class="o">.</span><span class="n">CheckStr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestConfigure.tearDown"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure.tearDown">[docs]</a>	<span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="TestConfigure.suite"><a class="viewcode-back" href="../../test.html#test.TestConfigure.TestConfigure.suite">[docs]</a>	<span class="k">def</span> <span class="nf">suite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestLoader</span><span class="p">()</span><span class="o">.</span><span class="n">loadTestsFromTestCase</span><span class="p">(</span><span class="n">TestConfigure</span><span class="p">)</span>
+		
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

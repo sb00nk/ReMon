@@ -1,0 +1,7 @@
+Descrizione
+===========
+
+SHS è un software che permette di eseguire un processo di Smoothing su degli istogrammi con un elevato numero di bin, distribuendo il carico computazionale su un numero arbitrario di macchine.
+
+| Questo progetto fa parte dell'Esame di **Linguaggi Dinamici** del CdL di Informatica - A.A. 2012-2013.
+|    Scritto da Giovanni Bartolomucci - *Mat. 56962*.

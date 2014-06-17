@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>src.Client &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for src.Client</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: Client</span>
+
+<span class="sd">Modulo che fa da front-end per l&#39;utente, creando uno strato virtuale che in modo trasparente fa da intermediario tra Server e Workers, lanciando inoltre una interfaccia grafica.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span><span class="o">,</span> <span class="nn">getpass</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">Configure</span>
+<span class="kn">import</span> <span class="nn">Interface</span>
+
+<span class="kn">import</span> <span class="nn">Pyro.naming</span>
+<span class="kn">import</span> <span class="nn">Pyro.core</span>
+<span class="kn">import</span> <span class="nn">Pyro.errors</span>
+
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span><span class="p">,</span> <span class="n">STDOUT</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">ifilter</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="c">#include modules from a subforder</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="n">cmd_subfolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()))[</span><span class="mi">0</span><span class="p">],</span><span class="s">&quot;../extra/modules/cairoplot&quot;</span><span class="p">)))</span>
+<span class="k">if</span> <span class="n">cmd_subfolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmd_subfolder</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">cairoplot</span>
+<span class="n">cmd_subfolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()))[</span><span class="mi">0</span><span class="p">],</span><span class="s">&quot;../extra/modules/lockfile&quot;</span><span class="p">)))</span>
+<span class="k">if</span> <span class="n">cmd_subfolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmd_subfolder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">lockfile</span> <span class="kn">import</span> <span class="n">FileLock</span><span class="p">,</span><span class="n">LockTimeout</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="n">Interval</span><span class="p">,</span><span class="n">TimeStep</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="bp">None</span>
+<span class="n">ConfigFile</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../src.html#src.Client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">():</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Manager</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ProbeManager</span> <span class="o">=</span> <span class="n">Manager</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">Continue</span> <span class="o">=</span> <span class="bp">True</span>
+
+		<span class="k">print</span> <span class="s">&quot;### Setting up Probes..&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">SetupMonitoring</span><span class="p">()</span>
+		<span class="c">#TODO: provare con demone</span>
+		<span class="k">print</span> <span class="s">&quot;### Starting GUI..&quot;</span>
+		<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">Interface</span><span class="o">.</span><span class="n">Main</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RemoteStartMonitoring</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SetupMonitoring</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProbeManager</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Client.ToggleContinue"><a class="viewcode-back" href="../../src.html#src.Client.Client.ToggleContinue">[docs]</a>	<span class="k">def</span> <span class="nf">ToggleContinue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Cambia il flag Continue che governa la ricezione dei dati.</span>
+
+<span class="sd">		:returns: *nothing*</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">Continue</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Continue</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.GatherResults"><a class="viewcode-back" href="../../src.html#src.Client.Client.GatherResults">[docs]</a>	<span class="k">def</span> <span class="nf">GatherResults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Recupera i risultati del monitoraggio dal Server.</span>
+
+<span class="sd">		:returns: Una lista contenente tutti i dati raccolti dalle Probe.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">Results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProbeManager</span><span class="o">.</span><span class="n">GetResult</span><span class="p">()</span>
+		<span class="n">Results</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ele</span><span class="p">:</span> <span class="p">(</span><span class="n">ele</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">Results</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.MakeLegend"><a class="viewcode-back" href="../../src.html#src.Client.Client.MakeLegend">[docs]</a>	<span class="k">def</span> <span class="nf">MakeLegend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FileName</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che produce un&#39;immagine con la legenda.</span>
+
+<span class="sd">		:param FileName: Nome file da assegnare al risultato.</span>
+<span class="sd">		:returns: *nothing*</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">global</span> <span class="n">Interval</span>
+		<span class="n">FileName</span> <span class="o">=</span> <span class="s">&#39;extra/MonitorGraph/&#39;</span><span class="o">+</span><span class="n">FileName</span>
+		<span class="n">FakeValues</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">))</span>
+	
+		<span class="c">#ogni volta cerca di acquisire il lock per creare una nuova immagine, se non riesce, rompe il lock</span>
+		<span class="n">TempLock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">FileName</span><span class="p">)</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">Interval</span><span class="p">)</span>
+		<span class="k">except</span> <span class="n">LockTimeout</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">break_lock</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">cairoplot</span><span class="o">.</span><span class="n">dot_line_plot</span><span class="p">(</span><span class="n">FileName</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">,</span><span class="n">FakeValues</span><span class="p">)),</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">)</span><span class="o">+</span><span class="mi">50</span><span class="p">,</span> 
+<span class="n">axis</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">series_legend</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">series_colors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Colors</span><span class="p">)</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.MakeGraph"><a class="viewcode-back" href="../../src.html#src.Client.Client.MakeGraph">[docs]</a>	<span class="k">def</span> <span class="nf">MakeGraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">FileName</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che produce un grafico temporale.</span>
+<span class="sd">	</span>
+<span class="sd">		:param Data: Serie di dati da dover graficare.</span>
+<span class="sd">		:param FileName: Nome file da assegnare al grafico prodotto.</span>
+<span class="sd">		:returns: *nothing*</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">global</span> <span class="n">Interval</span><span class="p">,</span><span class="n">TimeStep</span>
+
+		<span class="n">Markers</span><span class="o">=</span><span class="p">[]</span>
+		<span class="n">FileName</span> <span class="o">=</span> <span class="s">&#39;extra/MonitorGraph/&#39;</span><span class="o">+</span><span class="n">FileName</span>
+
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">TimeStep</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">Interval</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="n">Interval</span><span class="p">):</span> <span class="n">Markers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+		
+		<span class="c">#ogni volta cerca di acquisire il lock per creare una nuova immagine, se non riesce, rompe il lock</span>
+		<span class="n">TempLock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">FileName</span><span class="p">)</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">Interval</span><span class="p">)</span>
+		<span class="k">except</span> <span class="n">LockTimeout</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">break_lock</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">cairoplot</span><span class="o">.</span><span class="n">dot_line_plot</span><span class="p">(</span><span class="n">FileName</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">,</span><span class="n">Data</span><span class="p">[:])),</span> 
+<span class="mi">600</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">series_legend</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">x_labels</span><span class="o">=</span><span class="n">Markers</span><span class="p">,</span> <span class="n">series_colors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Colors</span><span class="p">)</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.MakeGraphPercent"><a class="viewcode-back" href="../../src.html#src.Client.Client.MakeGraphPercent">[docs]</a>	<span class="k">def</span> <span class="nf">MakeGraphPercent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">FileName</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che produce un grafico percentuale sotto forma di pieplot.</span>
+<span class="sd">	</span>
+<span class="sd">		:param Data: Dato da dover graficare.</span>
+<span class="sd">		:param FileName: Nome file da assegnare al grafico prodotto.</span>
+<span class="sd">		:returns: *nothing*</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">global</span> <span class="n">Interval</span>
+		<span class="n">Labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;%USED&quot;</span><span class="p">,</span><span class="s">&quot;TOT&quot;</span><span class="p">]</span>
+		<span class="n">FileName</span> <span class="o">=</span> <span class="s">&#39;extra/MonitorGraph/&#39;</span><span class="o">+</span><span class="n">FileName</span>
+
+		<span class="c">#selezione della combinazione di colori per i grafici percentuali, a soglie [0,33],[34,66],[67,100]</span>
+		<span class="k">if</span>  <span class="p">(</span><span class="n">Data</span> <span class="o">&lt;=</span> <span class="mi">33</span><span class="p">):</span> <span class="n">PercentColors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;lime&quot;</span><span class="p">,</span><span class="s">&quot;gray&quot;</span><span class="p">]</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">Data</span> <span class="o">&lt;=</span> <span class="mi">66</span><span class="p">):</span> <span class="n">PercentColors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;yellow&quot;</span><span class="p">,</span><span class="s">&quot;light_gray&quot;</span><span class="p">]</span>
+		<span class="k">else</span> <span class="p">:</span> <span class="n">PercentColors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;red&quot;</span><span class="p">,</span><span class="s">&quot;light_gray&quot;</span><span class="p">]</span>
+		<span class="n">Data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">Data</span><span class="p">),</span><span class="mi">100</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">Data</span><span class="p">)]</span>
+
+		<span class="c">#ogni volta cerca di acquisire il lock per creare una nuova immagine, se non riesce, rompe il lock</span>
+		<span class="n">TempLock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">FileName</span><span class="p">)</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">Interval</span><span class="p">)</span>
+		<span class="k">except</span> <span class="n">LockTimeout</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">break_lock</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">cairoplot</span><span class="o">.</span><span class="n">pie_plot</span><span class="p">(</span><span class="n">FileName</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">Labels</span><span class="p">,</span><span class="n">Data</span><span class="p">)),</span> <span class="mi">185</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">PercentColors</span><span class="p">)</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.MakeGraphTop3"><a class="viewcode-back" href="../../src.html#src.Client.Client.MakeGraphTop3">[docs]</a>	<span class="k">def</span> <span class="nf">MakeGraphTop3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">FileName</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che produce un grafico dei nodi a maggiore latenza sotto forma di istogram.</span>
+<span class="sd">	</span>
+<span class="sd">		:param Data: Serie di dati da dover graficare.</span>
+<span class="sd">		:param FileName: Nome file da assegnare al grafico prodotto.</span>
+<span class="sd">		:returns: *nothing*</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">global</span> <span class="n">Interval</span>
+		<span class="n">FileName</span> <span class="o">=</span> <span class="s">&#39;extra/MonitorGraph/&#39;</span><span class="o">+</span><span class="n">FileName</span>
+		
+		<span class="n">ordered</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Data</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="n">first3</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">colors3</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ordered</span><span class="p">:</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">first3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">):</span>
+				<span class="n">colors3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Colors</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+				<span class="n">first3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+		<span class="c">#ogni volta cerca di acquisire il lock per creare una nuova immagine, se non riesce, rompe il lock</span>
+		<span class="n">TempLock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">FileName</span><span class="p">)</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">Interval</span><span class="p">)</span>
+		<span class="k">except</span> <span class="n">LockTimeout</span><span class="p">:</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">break_lock</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">cairoplot</span><span class="o">.</span><span class="n">vertical_bar_plot</span><span class="p">(</span><span class="n">FileName</span><span class="p">,</span> <span class="n">first3</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="n">display_values</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors3</span><span class="p">)</span>
+			<span class="n">TempLock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.SetupMonitoring"><a class="viewcode-back" href="../../src.html#src.Client.Client.SetupMonitoring">[docs]</a>	<span class="k">def</span> <span class="nf">SetupMonitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione preparatoria per il setup del sistema di monitoraggio.</span>
+
+<span class="sd">		:returns: *nothing*.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">print</span> <span class="s">&quot;### Setup Monitoring...&quot;</span>
+		<span class="k">global</span> <span class="n">ConfigFile</span><span class="p">,</span><span class="n">TimeStep</span><span class="p">,</span><span class="n">Interval</span>
+		<span class="c">#ConfigFile = Configure.ConfigFile</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">LoadConfig</span><span class="p">(</span><span class="n">ConfigFile</span><span class="p">)</span> <span class="c"># Carica la configurazione.</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span> <span class="o">=</span> <span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProbeManager</span><span class="o">.</span><span class="n">GetProbe</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">NumbProbe</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">)</span>
+	
+		<span class="k">if</span><span class="p">(</span><span class="n">Configure</span><span class="o">.</span><span class="n">LocalhostOnly</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbProbe</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span><span class="p">):</span>
+				<span class="k">print</span> <span class="s">&quot;&gt;&gt; Start Probe #&quot;</span><span class="p">,</span><span class="n">i</span>
+				<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gnome-terminal -e </span><span class="se">\&quot;</span><span class="s">python src/Probe.py</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">print</span> <span class="s">&quot;&gt;&gt; Setup of Probes:</span><span class="se">\n\n\t</span><span class="s">Username:</span><span class="se">\t</span><span class="s">&quot;</span>
+			<span class="n">user</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+			<span class="n">passwd</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Password:</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">)</span>
+			<span class="n">hosts</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">line</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;./extra/fabric/hosts.txt&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">NumbProbe</span><span class="p">)])</span> <span class="c"># Vengono ottenuti i primi &quot;MaxNodes&quot; dalla lista degli hosts per fabric, escludendo l&#39;host Client</span>
+				
+			<span class="k">print</span> <span class="s">&quot;&gt;&gt; Loaded host list from Fabric&quot;</span>
+			<span class="c">#OPZIONE DI FABRIC PER NON ESSERE VERBOSE --hide everything			</span>
+			<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;cd ./extra/fabric; fab --hosts &quot;</span> <span class="o">+</span> <span class="n">hosts</span> <span class="o">+</span> <span class="s">&quot; -u &quot;</span> <span class="o">+</span> <span class="n">user</span> <span class="o">+</span> <span class="s">&quot; -p &quot;</span> <span class="o">+</span> <span class="n">passwd</span> <span class="o">+</span> <span class="s">&quot; load_workers &gt; /dev/null&quot;</span><span class="p">)</span>
+			<span class="k">print</span> <span class="s">&quot;&gt;&gt; Done!</span><span class="se">\n</span><span class="s">### Starting Probes...&quot;</span>
+			<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+			<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;cd ./extra/fabric; fab --hosts &quot;</span> <span class="o">+</span> <span class="n">hosts</span> <span class="o">+</span> <span class="s">&quot; -u &quot;</span> <span class="o">+</span> <span class="n">user</span> <span class="o">+</span> <span class="s">&quot; -p &quot;</span> <span class="o">+</span> <span class="n">passwd</span> <span class="o">+</span> <span class="s">&quot; start_workers&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+			<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+		<span class="n">TimeStep</span> <span class="o">=</span> <span class="n">Configure</span><span class="o">.</span><span class="n">TimeStep</span>
+		<span class="n">Interval</span> <span class="o">=</span> <span class="n">Configure</span><span class="o">.</span><span class="n">Interval</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">CPUData</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">TimeStep</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span><span class="p">)]</span> 
+		<span class="bp">self</span><span class="o">.</span><span class="n">MEMData</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">TimeStep</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span><span class="p">)]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">SWPData</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">TimeStep</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span><span class="p">)]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">LATData</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">TimeStep</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbNodes</span><span class="p">)]</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.RemoteStartMonitoring"><a class="viewcode-back" href="../../src.html#src.Client.Client.RemoteStartMonitoring">[docs]</a>	<span class="k">def</span> <span class="nf">RemoteStartMonitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione di appoggio per la GUI, per fare partire un tread di Monitoring</span>
+
+<span class="sd">		:returns: *nothing*.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Monitoring</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Client.Monitoring"><a class="viewcode-back" href="../../src.html#src.Client.Client.Monitoring">[docs]</a>	<span class="k">def</span> <span class="nf">Monitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione principale del Client, dove recupera i dati dal server e li usa per disegnare i grafici.</span>
+
+<span class="sd">		:returns: *nothing*.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">global</span> <span class="n">Interval</span>
+		<span class="n">LATStat</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Interval</span><span class="p">)</span>
+		<span class="n">MyColors</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;orange&quot;</span><span class="p">,</span><span class="s">&quot;lime&quot;</span><span class="p">,</span><span class="s">&quot;cyan&quot;</span><span class="p">,</span><span class="s">&quot;maroon&quot;</span><span class="p">,</span><span class="s">&quot;navy&quot;</span><span class="p">,</span><span class="s">&quot;yellow&quot;</span><span class="p">,</span><span class="s">&quot;magenta&quot;</span><span class="p">,</span><span class="s">&quot;green&quot;</span><span class="p">,</span><span class="s">&quot;red&quot;</span><span class="p">,</span><span class="s">&quot;blue&quot;</span><span class="p">,</span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="s">&quot;gray&quot;</span><span class="p">,</span><span class="s">&quot;light_gray&quot;</span><span class="p">,</span><span class="s">&quot;white&quot;</span><span class="p">]</span>
+		<span class="k">print</span> <span class="s">&quot;### Start Monitoring...&quot;</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Continue</span><span class="p">):</span>
+			<span class="k">try</span> <span class="p">:</span>
+				<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">Interval</span><span class="p">)</span>
+
+				<span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProbeManager</span><span class="o">.</span><span class="n">GetProbe</span><span class="p">()</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">NumbProbe</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">Token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ProbeManager</span><span class="o">.</span><span class="n">GetToken</span><span class="p">()</span>
+				<span class="n">CPUStat</span><span class="p">,</span><span class="n">MEMStat</span><span class="p">,</span><span class="n">SWPStat</span> <span class="o">=</span> <span class="p">[],[],[]</span>
+
+				<span class="c">#creazione della lista dei colori secondo l&#39;ordine alfabetico</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">Colors</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">Colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MyColors</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">)])</span>
+
+				<span class="c">#print &quot;&gt;&gt; Drawing legend...&quot;</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">MakeLegend</span><span class="p">(</span><span class="s">&quot;legenda.png&quot;</span><span class="p">)</span>
+				<span class="c">#print &quot;&gt;&gt; Collecting resaults from Probes...&quot;</span>
+				<span class="n">Results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GatherResults</span><span class="p">()</span>
+			
+				<span class="c">#selettori per andare a prelevare i valori giusti nella lista che rappresenta i risultati</span>
+				<span class="n">SelProbe</span><span class="p">,</span><span class="n">SelTag</span><span class="p">,</span><span class="n">SelValue1</span><span class="p">,</span><span class="n">SelValue2</span><span class="p">,</span><span class="n">SelValue3</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span>
+				<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumbProbe</span><span class="p">):</span>
+					<span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Token</span><span class="p">)):</span>
+						<span class="n">LATStat</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">[</span><span class="n">num</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">Interval</span>
+						
+					<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ifilter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ele</span><span class="p">:</span><span class="n">ele</span><span class="p">[</span><span class="n">SelProbe</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">ProbeList</span><span class="p">[</span><span class="n">num</span><span class="p">],</span> <span class="n">Results</span><span class="p">):</span>
+						<span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelTag</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;CPU&quot;</span><span class="p">):</span>
+							<span class="c">#trattamento dati per grafico temporale CPU</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">CPUData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">CPUData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue2</span><span class="p">])</span>
+							<span class="c">#trattamento dati per grafico statistica CPU</span>
+							<span class="n">CPUStat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue2</span><span class="p">])</span>
+							<span class="c">#trattamento dati per il grafico latenza CPU</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">LATData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">LATData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue3</span><span class="p">])</span>
+							<span class="c">#trattamento dati per grafico statistica Lat</span>
+							<span class="n">LATStat</span><span class="p">[</span><span class="n">element</span><span class="p">[</span><span class="n">SelProbe</span><span class="p">]]</span> <span class="o">=</span> <span class="n">element</span><span class="p">[</span><span class="n">SelValue3</span><span class="p">]</span>
+						<span class="k">elif</span> <span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelTag</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;MEM&quot;</span><span class="p">):</span>
+							<span class="c">#trattamento dati per grafico temporale MEM</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">MEMData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">MEMData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue1</span><span class="p">])</span>
+							<span class="c">#trattamento dati per grafico statistica MEM</span>
+							<span class="n">MEMStat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue1</span><span class="p">])</span>
+							<span class="c">#trattamento dati per grafico temporale SWP</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">SWPData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">SWPData</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue2</span><span class="p">])</span>
+							<span class="c">#trattamento dati per grafico statistica SWP</span>
+							<span class="n">SWPStat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="n">SelValue2</span><span class="p">])</span>
+				<span class="c">#creazione Grafici Temporali</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">MakeGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CPUData</span><span class="p">,</span> <span class="s">&quot;cpu.png&quot;</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">MakeGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEMData</span><span class="p">,</span> <span class="s">&quot;mem.png&quot;</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">MakeGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SWPData</span><span class="p">,</span> <span class="s">&quot;swp.png&quot;</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">MakeGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LATData</span><span class="p">,</span> <span class="s">&quot;lat.png&quot;</span><span class="p">)</span>
+	
+				<span class="c">#creazione Grafici Percentuali</span>
+				<span class="c">#le statistiche considerano solo i dati istantanei, se non sono presenti è meglio evitare di invocare le funzioni</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CPUStat</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">MakeGraphPercent</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">CPUStat</span><span class="p">),</span> <span class="s">&quot;cpu_stat.png&quot;</span><span class="p">)</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">MEMStat</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">MakeGraphPercent</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">MEMStat</span><span class="p">),</span> <span class="s">&quot;mem_stat.png&quot;</span><span class="p">)</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">SWPStat</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">MakeGraphPercent</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">SWPStat</span><span class="p">),</span> <span class="s">&quot;swp_stat.png&quot;</span><span class="p">)</span>
+	
+				<span class="c">#creazione Grafici Top 3</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">LATStat</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">MakeGraphTop3</span><span class="p">(</span><span class="n">LATStat</span><span class="p">,</span> <span class="s">&quot;lat_stat.png&quot;</span><span class="p">)</span>
+	
+			<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+				<span class="k">print</span> <span class="s">&quot;Closing all.&quot;</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">Continue</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div></div>
+<div class="viewcode-block" id="CheckStr"><a class="viewcode-back" href="../../src.html#src.Client.CheckStr">[docs]</a><span class="k">def</span> <span class="nf">CheckStr</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione che controlla la validità di una stringa.</span>
+
+<span class="sd">	:param value: Il valore di cui va effettuato il type-checking.</span>
+<span class="sd">	:returns: ``value`` stesso, se il valore è del tipo corretto; altrimenti solleva una eccezione ``TypeError``</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span> <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="s">&quot;Argomento &quot;&quot;--conf&quot;&quot; non valido.&quot;</span>
+	<span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">value</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Main"><a class="viewcode-back" href="../../src.html#src.Client.Main">[docs]</a><span class="k">def</span> <span class="nf">Main</span><span class="p">():</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione **Main**</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="s">&quot;Client.py [-g/s] [-l] [-c FILE]</span><span class="se">\n\n\t</span><span class="s"> --&gt; ReMon - Remote Monitor &lt;--&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-g&quot;</span><span class="p">,</span> <span class="s">&quot;--startgui&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;startgui&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Avvia l&#39;interfaccia grafica.&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-s&quot;</span><span class="p">,</span> <span class="s">&quot;--startserver&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;startserver&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Avvia il programma come istanza Server.&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-c&quot;</span><span class="p">,</span> <span class="s">&quot;--conf&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;FILE&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&quot;FILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Specifica il file di configurazione da utilizzare.&quot;</span><span class="p">)</span>
+	<span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&quot;-l&quot;</span><span class="p">,</span> <span class="s">&quot;--localhost&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;Indica che il software verrà utilizzato solo sulla macchina locale.&quot;</span><span class="p">)</span>
+
+	<span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+	<span class="n">ServerMode</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">startserver</span>
+	<span class="n">StartGui</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">startgui</span>
+	<span class="k">global</span> <span class="n">ConfigFile</span>
+	<span class="n">ConfigFile</span> <span class="o">=</span> <span class="n">CheckStr</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">FILE</span><span class="p">)</span>
+	<span class="n">LocalHost</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">localhost</span>
+	
+	<span class="n">Configure</span><span class="o">.</span><span class="n">LoadConfig</span><span class="p">(</span><span class="n">ConfigFile</span><span class="p">)</span> <span class="c"># Carico la configurazione da file</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">ConfigFile</span><span class="o">==</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;### ATT: No configuration file in input.</span><span class="se">\n</span><span class="s">	Defaults will be loaded.&quot;</span>
+		<span class="n">Configure</span><span class="o">.</span><span class="n">SaveConfig</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+		<span class="n">ConfigFile</span> <span class="o">=</span> <span class="n">Configure</span><span class="o">.</span><span class="n">ConfigFile</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">ServerMode</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;Running mode: SERVER&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">StartGui</span><span class="p">):</span> <span class="k">print</span><span class="p">(</span><span class="s">&quot;### ATT: Can&#39;t set both -g -s flags.&quot;</span><span class="p">)</span>
+		<span class="n">ServerString</span> <span class="o">=</span> <span class="s">&quot;python src/Server.py -c&quot;</span> <span class="o">+</span> <span class="n">ConfigFile</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">LocalHost</span><span class="p">):</span> <span class="n">ServerString</span> <span class="o">+=</span> <span class="s">&quot; -l&quot;</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">ServerString</span><span class="p">)</span>		
+		<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+	<span class="k">elif</span><span class="p">(</span><span class="n">StartGui</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;Running mode: CLIENT&quot;</span>
+		<span class="k">global</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">TimeStep</span>
+		<span class="n">Interval</span> <span class="o">=</span> <span class="n">Configure</span><span class="o">.</span><span class="n">Interval</span>
+		<span class="n">TimeStep</span> <span class="o">=</span> <span class="n">Configure</span><span class="o">.</span><span class="n">TimeStep</span>
+		<span class="n">Pyro</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">initClient</span><span class="p">()</span>
+		<span class="n">C</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">Pyro</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">getProxyForURI</span><span class="p">(</span><span class="s">&quot;PYRONAME://:LDServer.ProbeManager&quot;</span><span class="p">))</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="n">Main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

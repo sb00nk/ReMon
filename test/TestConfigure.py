@@ -1,0 +1,85 @@
+#!/usr/bin/python
+# coding: utf-8
+
+"""
+Modulo che effettua il processo di Testing sul codice del progetto.
+
+"""
+
+import sys
+import unittest
+
+from src import Configure
+
+#-------------------------------------------------------------------------------
+
+class TestConfigure(unittest.TestCase):
+	"""
+	Classe che controlla il modulo di gestione della Configurazione
+
+	"""
+	def setUp(self):
+		"""
+		Funzione preparatoria per il testing del Modulo
+
+		"""
+		self.ExcludeServer 	= 0
+		self.MaxNodes 		= 4
+		self.LocalhostOnly	= 1
+		self.TimeStep 		= 20
+		self.Interval 		= 1 
+
+	def testIO(self):
+		"""
+		Funzione che controlla la coerenza dei dati in lettura/scrittura della configurazione
+
+		"""
+		Configure.ExcludeServer 	= self.ExcludeServer
+		Configure.MaxNodes 		= self.MaxNodes
+		Configure.LocalhostOnly		= self.LocalhostOnly
+		Configure.TimeStep 		= self.TimeStep
+		Configure.Interval 		= self.Interval 
+		Configure.SaveConfig(NewFile 	= "/tmp/test.ini")
+
+		Configure.LoadConfig()
+		self.assertEqual(Configure.ExcludeServer, self.ExcludeServer)
+		self.assertEqual(Configure.MaxNodes,	  self.MaxNodes)
+		self.assertEqual(Configure.LocalhostOnly, self.LocalhostOnly)
+		self.assertEqual(Configure.TimeStep,	  self.TimeStep)
+		self.assertEqual(Configure.Interval,	  self.Interval)
+
+	def testMeth(self):
+		"""
+		Funzione che controlla la completezza della implementazione dei metodi all'interno del Modulo
+
+		"""
+		# Test di Coerenza Funzionale. Controllo se il metodo della classe, sottoposto ad input validi, risponde secondo specifica
+		def testMeth(self):
+			self.assertTrue(callable(Configure.LoadConfig), "Metodo ""LoadConfig"" inesistente.")
+			self.assertTrue(callable(Configure.SaveConfig), "Metodo ""SaveConfig"" inesistente.")
+
+	def testStr(self):
+		"""
+		Funzione che controlla la correttezza del tipo immesso da una opzione
+
+		"""
+		self.assertRaises(TypeError, Configure.CheckStr, 1)
+
+	def tearDown(self):
+		"""
+		Funzione di uscita del Modulo
+
+		"""
+		pass
+
+	def suite(self):
+		"""
+		Funzione per definire la suite di test del Modulo
+
+		"""
+		return unittest.TestLoader().loadTestsFromTestCase(TestConfigure)
+		
+#-------------------------------------------------------------------------------
+
+if __name__ == '__main__':
+	unittest.main()

@@ -1,0 +1,37 @@
+Package SRC
+=============
+
+Questo `package` contiene la "logica" del programma, ovvero tutto il codice per l'implementazione vera e propria del progetto.
+
+
+:mod:`Client` Modulo
+--------------------
+
+.. automodule:: src.Client
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`Configure` Modulo
+-----------------------
+
+.. automodule:: src.Configure
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`Server` Modulo
+--------------------
+
+.. automodule:: src.Server
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`Probe` Modulo
+--------------------
+
+.. automodule:: src.Probe
+    :members:
+    :undoc-members:
+    :show-inheritance:

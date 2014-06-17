@@ -1,0 +1,671 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Package SRC &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="index.html" />
+    <link rel="up" title="Project Packages and Modules" href="modules.html" />
+    <link rel="next" title="Package SRC.Interface" href="src.Interface.html" />
+    <link rel="prev" title="Project Packages and Modules" href="modules.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li class="right" >
+          <a href="src.Interface.html" title="Package SRC.Interface"
+             accesskey="N">successivo</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Project Packages and Modules"
+             accesskey="P">precedente</a> |</li>
+        <li><a href="index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" accesskey="U">Project Packages and Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="package-src">
+<h1>Package SRC<a class="headerlink" href="#package-src" title="link permanente per questa intestazione">¶</a></h1>
+<p>Questo <cite>package</cite> contiene la &#8220;logica&#8221; del programma, ovvero tutto il codice per l&#8217;implementazione vera e propria del progetto.</p>
+<div class="section" id="module-src.Client">
+<span id="client-modulo"></span><h2><a class="reference internal" href="#module-Client" title="Client"><tt class="xref py py-mod docutils literal"><span class="pre">Client</span></tt></a> Modulo<a class="headerlink" href="#module-src.Client" title="link permanente per questa intestazione">¶</a></h2>
+<span class="target" id="module-Client"></span><p>Modulo che fa da front-end per l&#8217;utente, lancia il server oppure l&#8217;interfaccia grafica e le Probes a seconda della modalità.</p>
+<dl class="function">
+<dt id="src.Client.CheckStr">
+<tt class="descclassname">src.Client.</tt><tt class="descname">CheckStr</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/src/Client.html#CheckStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.CheckStr" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la validità di una stringa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>value</strong> &#8211; Il valore di cui va effettuato il type-checking.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">value</span></tt> stesso, se il valore è del tipo corretto; altrimenti solleva una eccezione <tt class="docutils literal"><span class="pre">TypeError</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="src.Client.Client">
+<em class="property">class </em><tt class="descclassname">src.Client.</tt><tt class="descname">Client</tt><big>(</big><em>Manager</em><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client" title="link permanente per questa definizione">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.Client.Client.GatherResults">
+<tt class="descname">GatherResults</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.GatherResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.GatherResults" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Recupera i risultati del monitoraggio dal Server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body">Una lista contenente tutti i dati raccolti dalle Probe.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.MakeGraph">
+<tt class="descname">MakeGraph</tt><big>(</big><em>Data</em>, <em>FileName</em><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.MakeGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.MakeGraph" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che produce un grafico temporale.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>Data</strong> &#8211; Serie di dati da dover graficare.</li>
+<li><strong>FileName</strong> &#8211; Nome file da assegnare al grafico prodotto.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.MakeGraphPercent">
+<tt class="descname">MakeGraphPercent</tt><big>(</big><em>Data</em>, <em>FileName</em><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.MakeGraphPercent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.MakeGraphPercent" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che produce un grafico percentuale sotto forma di pieplot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>Data</strong> &#8211; Dato da dover graficare.</li>
+<li><strong>FileName</strong> &#8211; Nome file da assegnare al grafico prodotto.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.MakeGraphTop3">
+<tt class="descname">MakeGraphTop3</tt><big>(</big><em>Data</em>, <em>FileName</em><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.MakeGraphTop3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.MakeGraphTop3" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che produce un grafico dei nodi a maggiore latenza sotto forma di istogram.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>Data</strong> &#8211; Serie di dati da dover graficare.</li>
+<li><strong>FileName</strong> &#8211; Nome file da assegnare al grafico prodotto.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.MakeLegend">
+<tt class="descname">MakeLegend</tt><big>(</big><em>FileName</em><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.MakeLegend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.MakeLegend" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che produce un&#8217;immagine con la legenda.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>FileName</strong> &#8211; Nome file da assegnare al risultato.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.Monitoring">
+<tt class="descname">Monitoring</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.Monitoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.Monitoring" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione principale del Client, dove recupera i dati dal server e li usa per disegnare i grafici.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.RemoteStartMonitoring">
+<tt class="descname">RemoteStartMonitoring</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.RemoteStartMonitoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.RemoteStartMonitoring" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione di appoggio per la GUI, per fare partire un tread di Monitoring</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Client.Client.SetupMonitoring">
+<tt class="descname">SetupMonitoring</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Client.html#Client.SetupMonitoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Client.SetupMonitoring" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione preparatoria per il setup del sistema di monitoraggio.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Client.Main">
+<tt class="descclassname">src.Client.</tt><tt class="descname">Main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Client.html#Main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Client.Main" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione <strong>Main</strong></p>
+<p>Il punto di partenza del programma, analizza le opzioni richieste e lancia il Server oppure Client, GUI e Probes a seconda della modalità.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.Configure">
+<span id="configure-modulo"></span><h2><a class="reference internal" href="#module-Configure" title="Configure"><tt class="xref py py-mod docutils literal"><span class="pre">Configure</span></tt></a> Modulo<a class="headerlink" href="#module-src.Configure" title="link permanente per questa intestazione">¶</a></h2>
+<span class="target" id="module-Configure"></span><p>Modulo che gestisce la Configurazione dell&#8217;intero progetto. 
+Contiene medoti per il salvataggio e il caricamento delle impostazioni dei principali parametri.</p>
+<dl class="function">
+<dt id="src.Configure.CheckStr">
+<tt class="descclassname">src.Configure.</tt><tt class="descname">CheckStr</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/src/Configure.html#CheckStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Configure.CheckStr" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la validità di una stringa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>value</strong> &#8211; Il valore di cui va effettuato il type-checking.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">value</span></tt> stesso, se il valore è del tipo corretto.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><tt class="docutils literal"><span class="pre">TypeError</span></tt> se il tipo non è corretto.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Configure.LoadConfig">
+<tt class="descclassname">src.Configure.</tt><tt class="descname">LoadConfig</tt><big>(</big><em>CF=None</em><big>)</big><a class="reference internal" href="_modules/src/Configure.html#LoadConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Configure.LoadConfig" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che carica le impostazioni da file specificato.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>CF</strong> &#8211; Il percorso del file di configurazione in cui salvare i dati. Se lasciato su <tt class="docutils literal"><span class="pre">None</span></tt> verrà utilizzato il percorso correntemente utilizzato, altrimenti quest&#8217;ultimo verrà sostituito dal nuovo percorso specificato.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Configure.SaveConfig">
+<tt class="descclassname">src.Configure.</tt><tt class="descname">SaveConfig</tt><big>(</big><em>Reset=False</em>, <em>NewFile=''</em><big>)</big><a class="reference internal" href="_modules/src/Configure.html#SaveConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Configure.SaveConfig" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che salva le impostazioni su file specificato.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>Reset</strong> &#8211; Indica se è necessario salvare le impostazioni di default all&#8217;interno del file specificato.</li>
+<li><strong>NewFile</strong> &#8211; Il percorso del file di configurazione in cui salvare i dati.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.Server">
+<span id="server-modulo"></span><h2><a class="reference internal" href="#module-Server" title="Server"><tt class="xref py py-mod docutils literal"><span class="pre">Server</span></tt></a> Modulo<a class="headerlink" href="#module-src.Server" title="link permanente per questa intestazione">¶</a></h2>
+<span class="target" id="module-Server"></span><p>Modulo che fa da back-end per l&#8217;utente, gestisce la comunicazione tra il Client e le Probes tramite PyRO</p>
+<dl class="function">
+<dt id="src.Server.CheckStr">
+<tt class="descclassname">src.Server.</tt><tt class="descname">CheckStr</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/src/Server.html#CheckStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.CheckStr" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la validità di una stringa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>value</strong> &#8211; Il valore di cui va effettuato il type-checking.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">value</span></tt> stesso, se il valore è del tipo corretto; altrimenti solleva una eccezione <tt class="docutils literal"><span class="pre">TypeError</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Server.Main">
+<tt class="descclassname">src.Server.</tt><tt class="descname">Main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#Main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.Main" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione Main del Server.</p>
+<p>Legge le opzioni che gli passa il Client quando lo lancia, nel caso modifica il file hosts (locale) e fa partire il server PyRo che si mette in ascolto.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="src.Server.ProbeManager">
+<em class="property">class </em><tt class="descclassname">src.Server.</tt><tt class="descname">ProbeManager</tt><a class="reference internal" href="_modules/src/Server.html#ProbeManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">Pyro.core.ObjBase</span></tt></p>
+<p>Classe ProbeManager che contiene i metodi necessari alla gestione delle comunicazioni tra le Probes ed il Client.</p>
+<p>In particolare le Probes richiedono i parametri per effettuare le misure al Server, e gli forniscono i risultati.
+Quando il Client lo richiede, gli vengono spediti tutti i risultati in possesso del Server, che li azzera localmente e ricomincia.</p>
+<dl class="method">
+<dt id="src.Server.ProbeManager.ACKNode">
+<tt class="descname">ACKNode</tt><big>(</big><em>ProbeID</em><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.ACKNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.ACKNode" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo che gestisce l&#8217;acknowledgement di nuove Probe al Server.</p>
+<p>In questo modo è possibile tenere traccia delle Probes a cui è stato dato il permesso di lavorare
+ed è possibile controllare il <em>numero massimo consentito</em> di Probes in monitoring.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> se il Server ha acconsentito all&#8217;introduzione del nuovo Worker.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">False</span></tt> se il Server ha raggiunto il numero massimo di Worker consentito.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.CheckList">
+<tt class="descname">CheckList</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.CheckList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.CheckList" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per controllare se le Probe sono ancora attive, basandosi sul loro ultimo risultato sottomesso. Modifica self.ProbeList</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.GetProbe">
+<tt class="descname">GetProbe</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.GetProbe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.GetProbe" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per ottenere la lista dalle Probe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body">La lista degli identificativi delle Probe.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.GetResult">
+<tt class="descname">GetResult</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.GetResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.GetResult" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per ottenere la lista dei risultati ottenuti dalle Probe. Dopo questa operazione, la lista viene svuotata.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body">La lista dei risultati.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.GetStress">
+<tt class="descname">GetStress</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.GetStress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.GetStress" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per modificare i flag di carico su CPU e MEM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>index</strong> &#8211; indice nella ProbeList della Probe interessata.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body">i valori degli StressFlags della specifica Probe.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.GetToken">
+<tt class="descname">GetToken</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.GetToken"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.GetToken" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per ottenere il nome utilizzato come Token.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body">L&#8217;elemento Token.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.GetWork">
+<tt class="descname">GetWork</tt><big>(</big><em>ProbeID</em><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.GetWork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.GetWork" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per comunicare tra la Probe remota ed il Server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>ProbeID</strong> &#8211; identificativo della Probe.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body">Una tupla contenente tutte le informazioni per il monitoraggio da parte della Probe.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.PutResult">
+<tt class="descname">PutResult</tt><big>(</big><em>item</em><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.PutResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.PutResult" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo che inserisce nella coda dei Risultati un nuovo oggetto.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>item</strong> &#8211; l&#8217;oggetto da aggiungere alla coda.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.SearchPlaceholder">
+<tt class="descname">SearchPlaceholder</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.SearchPlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.SearchPlaceholder" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per controllare se nella ProbeList ci sono delle occorrenze di placeholder ZOMBIE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body">indice dell&#8217;elemento placeholder se trovato.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body">valore -1 altrimenti.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.SetStress">
+<tt class="descname">SetStress</tt><big>(</big><em>index</em>, <em>flag1</em>, <em>flag2</em><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.SetStress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.SetStress" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per modificare i flag di carico su CPU e MEM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>index</strong> &#8211; indice nella ProbeList della Probe interessata.</li>
+<li><strong>value</strong> &#8211; nuovi valori da assegnare ai flag.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Server.ProbeManager.ShutDown">
+<tt class="descname">ShutDown</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Server.html#ProbeManager.ShutDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Server.ProbeManager.ShutDown" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Metodo per terminare in automatico il ProbeManager.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.Probe">
+<span id="probe-modulo"></span><h2><a class="reference internal" href="#module-Probe" title="Probe"><tt class="xref py py-mod docutils literal"><span class="pre">Probe</span></tt></a> Modulo<a class="headerlink" href="#module-src.Probe" title="link permanente per questa intestazione">¶</a></h2>
+<span class="target" id="module-Probe"></span><p>Modulo che gestisce il codice che deve eseguire ogni nodo, ovvero la richiesta dei dati dal Server e l&#8217;applicazione del monitoraggio sul sistema ospite.</p>
+<dl class="function">
+<dt id="src.Probe.CatchCPU">
+<tt class="descclassname">src.Probe.</tt><tt class="descname">CatchCPU</tt><big>(</big><em>RunNumb</em>, <em>Interval</em>, <em>TimeStart</em><big>)</big><a class="reference internal" href="_modules/src/Probe.html#CatchCPU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Probe.CatchCPU" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per catturare i dati della CPU</p>
+<dl class="docutils">
+<dt>Cattura il numero delle CPUs del nodo sul quale gira, la percentuale di utilizzo media nell&#8217;intervallo richiesto</dt>
+<dd>e li impacchetta per formare la risposta.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>RunNumb</strong> &#8211; Il numero della Run corrente (al momento in cui è stato richiesto il lavoro al server)</li>
+<li><strong>Interval</strong> &#8211; Intervallo tra un campionamento e l&#8217;altro.</li>
+<li><strong>TimeStart</strong> &#8211; Tempo di avvio di questo campionamento, lo restituisco in uscita per poter calcolare la latenza.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last">Una tupla contenente i dati rilevati nel Interval.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Probe.CatchMEM">
+<tt class="descclassname">src.Probe.</tt><tt class="descname">CatchMEM</tt><big>(</big><em>RunNumb</em>, <em>Interval</em>, <em>TimeStart</em><big>)</big><a class="reference internal" href="_modules/src/Probe.html#CatchMEM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Probe.CatchMEM" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per catturare i dati della Memoria</p>
+<dl class="docutils">
+<dt>Cattura le percentuali di utilizzo della memoria e della swap medie nell&#8217;intervallo richiesto</dt>
+<dd>e le impacchetta per formare la risposta.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>RunNumb</strong> &#8211; Il numero della Run corrente (al momento in cui è stato richiesto il lavoro al server)</li>
+<li><strong>Interval</strong> &#8211; Intervallo tra un campionamento e l&#8217;altro.</li>
+<li><strong>TimeStart</strong> &#8211; Tempo di avvio di questo campionamento, lo restituisco in uscita per poter calcolare la latenza.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last">Una tupla contenente i dati rilevati nel Interval.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Probe.Main">
+<tt class="descclassname">src.Probe.</tt><tt class="descname">Main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Probe.html#Main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Probe.Main" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione Main della Probe.</p>
+<p>All&#8217;inizio la Probe si occupa di contattare il Server e di registrarsi presso di lui. Dopodichè comincia a chiedere lavoro al server, cioè una lista contenente le indicazioni delle misure che deve fare e se ha dei carichi extra.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Probe.StressCPU">
+<tt class="descclassname">src.Probe.</tt><tt class="descname">StressCPU</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Probe.html#StressCPU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Probe.StressCPU" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per mettere sotto sforzo la CPU</p>
+<p>Calcola numerosi interi random intorno ad un intervallo fissato (Order) per mostrare il consumo di CPU</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.Probe.StressMEM">
+<tt class="descclassname">src.Probe.</tt><tt class="descname">StressMEM</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Probe.html#StressMEM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Probe.StressMEM" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per mettere sotto sforzo la Memoria</p>
+<p>Alloca Order locazioni di memoria di dimensione fissata per mostrare il consumo di Memoria</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Tabella dei contenuti</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Package SRC</a><ul>
+<li><a class="reference internal" href="#module-src.Client"><tt class="docutils literal"><span class="pre">Client</span></tt> Modulo</a></li>
+<li><a class="reference internal" href="#module-src.Configure"><tt class="docutils literal"><span class="pre">Configure</span></tt> Modulo</a></li>
+<li><a class="reference internal" href="#module-src.Server"><tt class="docutils literal"><span class="pre">Server</span></tt> Modulo</a></li>
+<li><a class="reference internal" href="#module-src.Probe"><tt class="docutils literal"><span class="pre">Probe</span></tt> Modulo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Argomento precedente</h4>
+  <p class="topless"><a href="modules.html"
+                        title="capitolo precedente">Project Packages and Modules</a></p>
+  <h4>Argomento successivo</h4>
+  <p class="topless"><a href="src.Interface.html"
+                        title="capitolo successivo">Package SRC.Interface</a></p>
+  <h3>Questa pagina</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/src.txt"
+           rel="nofollow">Mostra sorgente</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li class="right" >
+          <a href="src.Interface.html" title="Package SRC.Interface"
+             >successivo</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Project Packages and Modules"
+             >precedente</a> |</li>
+        <li><a href="index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >Project Packages and Modules</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

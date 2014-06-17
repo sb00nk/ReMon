@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Package TEST &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="index.html" />
+    <link rel="up" title="Project Packages and Modules" href="modules.html" />
+    <link rel="prev" title="Package SRC.Interface" href="src.Interface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li class="right" >
+          <a href="src.Interface.html" title="Package SRC.Interface"
+             accesskey="P">precedente</a> |</li>
+        <li><a href="index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" accesskey="U">Project Packages and Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="package-test">
+<h1>Package TEST<a class="headerlink" href="#package-test" title="link permanente per questa intestazione">¶</a></h1>
+<p>Questo <cite>package</cite> contiene la suite di testing del programma, ovvero l&#8217;esecuzione dei controlli per poter verificare il corretto funzionamento di tutti i moduli del programma stesso.</p>
+<div class="section" id="module-test.TestClient">
+<span id="testclient-modulo"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">TestClient</span></tt> Modulo<a class="headerlink" href="#module-test.TestClient" title="link permanente per questa intestazione">¶</a></h2>
+<p>Modulo che effettua il processo di Testing sul codice del progetto.</p>
+<dl class="class">
+<dt id="test.TestClient.TestClient">
+<em class="property">class </em><tt class="descclassname">test.TestClient.</tt><tt class="descname">TestClient</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<p>Classe che controlla il modulo di Client</p>
+<dl class="method">
+<dt id="test.TestClient.TestClient.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient.setUp" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione preparatoria per il testing del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestClient.TestClient.suite">
+<tt class="descname">suite</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient.suite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient.suite" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per definire la suite di test del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestClient.TestClient.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient.tearDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient.tearDown" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione di uscita del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestClient.TestClient.testMeth">
+<tt class="descname">testMeth</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient.testMeth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient.testMeth" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la completezza della implementazione dei metodi all&#8217;interno del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestClient.TestClient.testObj">
+<tt class="descname">testObj</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient.testObj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient.testObj" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la correttezza degli oggetti del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestClient.TestClient.testStr">
+<tt class="descname">testStr</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestClient.html#TestClient.testStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestClient.TestClient.testStr" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la correttezza del tipo immesso da una opzione</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test.TestConfigure">
+<span id="testconfigure-modulo"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">TestConfigure</span></tt> Modulo<a class="headerlink" href="#module-test.TestConfigure" title="link permanente per questa intestazione">¶</a></h2>
+<p>Modulo che effettua il processo di Testing sul codice del progetto.</p>
+<dl class="class">
+<dt id="test.TestConfigure.TestConfigure">
+<em class="property">class </em><tt class="descclassname">test.TestConfigure.</tt><tt class="descname">TestConfigure</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<p>Classe che controlla il modulo di gestione della Configurazione</p>
+<dl class="method">
+<dt id="test.TestConfigure.TestConfigure.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure.setUp" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione preparatoria per il testing del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestConfigure.TestConfigure.suite">
+<tt class="descname">suite</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure.suite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure.suite" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per definire la suite di test del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestConfigure.TestConfigure.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure.tearDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure.tearDown" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione di uscita del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestConfigure.TestConfigure.testIO">
+<tt class="descname">testIO</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure.testIO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure.testIO" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la coerenza dei dati in lettura/scrittura della configurazione</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestConfigure.TestConfigure.testMeth">
+<tt class="descname">testMeth</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure.testMeth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure.testMeth" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la completezza della implementazione dei metodi all&#8217;interno del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestConfigure.TestConfigure.testStr">
+<tt class="descname">testStr</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestConfigure.html#TestConfigure.testStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestConfigure.TestConfigure.testStr" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la correttezza del tipo immesso da una opzione</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test.TestServer">
+<span id="testserver-modulo"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">TestServer</span></tt> Modulo<a class="headerlink" href="#module-test.TestServer" title="link permanente per questa intestazione">¶</a></h2>
+<p>Modulo che effettua il processo di Testing sul codice del progetto.</p>
+<dl class="class">
+<dt id="test.TestServer.TestServer">
+<em class="property">class </em><tt class="descclassname">test.TestServer.</tt><tt class="descname">TestServer</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<p>Classe che controlla il modulo di Server</p>
+<dl class="method">
+<dt id="test.TestServer.TestServer.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.setUp" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione preparatoria per il testing del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.suite">
+<tt class="descname">suite</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.suite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.suite" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione per definire la suite di test del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.tearDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.tearDown" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione di uscita del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testGetCheckProbe">
+<tt class="descname">testGetCheckProbe</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testGetCheckProbe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testGetCheckProbe" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la coerenza tra le Probes inserite e la lista ottenuta</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testMeth">
+<tt class="descname">testMeth</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testMeth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testMeth" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la completezza della implementazione dei metodi all&#8217;interno del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testNodeACK">
+<tt class="descname">testNodeACK</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testNodeACK"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testNodeACK" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la corretta esclusione di un numero troppo elevato di nodi</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testObj">
+<tt class="descname">testObj</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testObj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testObj" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la correttezza degli oggetti del Modulo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testPutGetResult">
+<tt class="descname">testPutGetResult</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testPutGetResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testPutGetResult" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la coerenza tra un Probe inserito e ottenuto dalla lista</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testSetGetStress">
+<tt class="descname">testSetGetStress</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testSetGetStress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testSetGetStress" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la corretta configurazione dei flag di stress</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="test.TestServer.TestServer.testStr">
+<tt class="descname">testStr</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/test/TestServer.html#TestServer.testStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.TestServer.TestServer.testStr" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione che controlla la correttezza del tipo immesso da una opzione</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Tabella dei contenuti</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Package TEST</a><ul>
+<li><a class="reference internal" href="#module-test.TestClient"><tt class="docutils literal"><span class="pre">TestClient</span></tt> Modulo</a></li>
+<li><a class="reference internal" href="#module-test.TestConfigure"><tt class="docutils literal"><span class="pre">TestConfigure</span></tt> Modulo</a></li>
+<li><a class="reference internal" href="#module-test.TestServer"><tt class="docutils literal"><span class="pre">TestServer</span></tt> Modulo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Argomento precedente</h4>
+  <p class="topless"><a href="src.Interface.html"
+                        title="capitolo precedente">Package SRC.Interface</a></p>
+  <h3>Questa pagina</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/test.txt"
+           rel="nofollow">Mostra sorgente</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li class="right" >
+          <a href="src.Interface.html" title="Package SRC.Interface"
+             >precedente</a> |</li>
+        <li><a href="index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >Project Packages and Modules</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

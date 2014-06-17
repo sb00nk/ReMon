@@ -1,0 +1,527 @@
+#!/usr/bin/python
+# coding: utf-8
+
+"""
+.. module:: Interface
+
+Modulo per gestire l'interfaccia grafica del monitor, collega i segnali agli handler e trasmette le modifiche operate dall'utente ai moduli Client e Server.
+
+"""
+
+import sys,os
+import time
+import webbrowser
+#package used for GTK+ 3 applications in Python
+from gi.repository import Gtk, GdkPixbuf
+import Client
+import Configure
+#include modules from a subforder
+import inspect
+cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile(inspect.currentframe()))[0],"../extra/modules/lockfile")))
+if cmd_subfolder not in sys.path:
+    sys.path.insert(0, cmd_subfolder)
+from lockfile import FileLock,AlreadyLocked,LockFailed,LockTimeout
+#-------------------------------------------------------------------------------
+#intervallo per evitare che i grafici si aggiornino all'impazzata
+Quiet=0.01
+Timeout=1
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+		
+class MainWindow():
+	def __init__(self, CallMonitor, CallSetup, CallManager):
+		#callbacks per Client e Server
+		self.start_monitor = CallMonitor
+		self.setup_monitor = CallSetup
+		self.manager = CallManager
+
+		#settaggio grafici
+		self.RunFlag = False
+		self.SetLocks()
+
+		#costruzione GUI
+		self.builder = Gtk.Builder()
+		self.builder.add_from_file("src/MonitorGui.glade")
+
+		#customu Colors per cairoplot
+		self.color_counter = 0
+				
+		dic = { 
+			"on_quit_button_press_event" 	: self.menu_quit,
+			"on_MainWindow_delete_event" 	: self.request_quit,
+			"on_MainWindow_destroy" 	: self.quit,
+			"on_cpu_chart_draw" 		: self.show_cpu,
+			"on_mem_chart_draw" 		: self.show_mem,
+			"on_lat_chart_draw" 		: self.show_lat,
+			"on_cpu_tot_stat_draw" 		: self.show_cpu_stat,
+			"on_mem_tot_stat_draw" 		: self.show_mem_stat,
+			"on_swp_tot_stat_draw"		: self.show_swp_stat,
+			"on_lat_tot_stat_draw" 		: self.show_lat_stat,
+			"on_legend_chart_draw" 		: self.show_legend,
+			"on_start_button_press" 	: self.start_monitoring,
+			"on_about_dialog"		: self.about_dialog,
+			"show_something" 		: self.show_dialog,
+			"hide_something" 		: self.hide_dialog,
+			"set_something"			: self.set_widget,
+			"on_SendStress_pressed" 	: self.run_stress,
+			"on_ProbeBox_config" 		: self.config_combo_probe,
+			"on_ConfirmConfButton_press" 	: self.config_probe,
+			"on_documentation_button_press" : self.open_doc,
+			"on_SaveGraph_button_press"	: self.save_graph,
+			"on_refresh_button_press"	: self.refresh_probe
+		}
+		self.builder.connect_signals(dic)
+		self.window = self.builder.get_object("MainWindow")
+		self.window.show()
+		Gtk.main()
+#-------------------------------------------------------------------------------
+
+	def SetLocks(self):
+		"""
+		Funzione di appoggio per settare i FileLock su tutti i grafici utilizzati.
+		
+		:returns: *nulla*
+		"""
+		thisRun = self.RunFlag
+		self.CPUTempLock = FileLock(self.BuildFilePath(thisRun, "cpu.png"))
+		self.MEMTempLock = FileLock(self.BuildFilePath(thisRun, "mem.png"))
+		self.SWPTempLock = FileLock(self.BuildFilePath(thisRun, "swp.png"))
+		self.LATTempLock = FileLock(self.BuildFilePath(thisRun, "lat.png"))
+		self.LEGTempLock = FileLock(self.BuildFilePath(thisRun, "legenda.png"))
+		self.CPUStatLock = FileLock(self.BuildFilePath(thisRun, "cpu_stat.png"))
+		self.MEMStatLock = FileLock(self.BuildFilePath(thisRun, "mem_stat.png"))
+		self.SWPStatLock = FileLock(self.BuildFilePath(thisRun, "swp_stat.png"))
+		self.LATStatLock = FileLock(self.BuildFilePath(thisRun, "lat_stat.png"))
+#-------------------------------------------------------------------------------
+
+	def BuildFilePath(self, ThisRun, FileName):
+		"""
+		In base al flag self.RunFlag decide come costruire il percorso del file desiderato.
+		
+		:param FileName: Nome del file desiderato.
+		:returns: Il percorso completo del file da visualizzare nella GUI.
+		"""
+		if (ThisRun):
+			FileNamePath = 'extra/MonitorGraph/'+FileName
+		else:
+			FileNamePath = 'extra/MonitorGraph/defaults/def_'+FileName
+		return FileNamePath
+
+#-------------------------------------------------------------------------------
+
+	def open_doc(self, widget, data=None):
+		"""
+		Funzione handler per aprire la documentazione.
+		
+		:returns: *nulla*
+		"""
+		webbrowser.open('file://'+os.path.abspath("./doc/build/html/index.html"))
+#-------------------------------------------------------------------------------
+
+	def save_graph(self, widget, data=None):
+		"""
+		Funzione handler per il salvataggio dei grafici.
+		
+		:returns: *nulla*
+		"""
+		#un po' di pulizia prima di fare il salvataggio
+		os.system("find ./extra/MonitorGraph/ -type f -not -name '*.png' | xargs rm -f")
+		snapshotFile ="./extra/UserOutput/Snapshot"+time.strftime("%Y%m%d-%H%M", time.gmtime())+".tar"
+		os.system("tar -cf "+snapshotFile+" --exclude def* --directory ./extra/ MonitorGraph/")
+		print "Snapshot saved to",snapshotFile
+
+#-------------------------------------------------------------------------------
+
+	def get_color(self, widget, data=None):
+		"""
+		Funzione handler per recuperare un colore nel formato utilizzato da cairoplot.
+		
+		:returns: *nulla*
+		"""
+		pygtk_color = widget.get_current_color()
+		pygtk_color = pygtk_color.to_string()
+		
+		pygtk_red = int('0x'+pygtk_color[1:5],16)
+		pygtk_green = int('0x'+pygtk_color[5:9],16)
+		pygtk_blue = int('0x'+pygtk_color[9:12],16)
+		
+		cairo_color = '"custom-'+str(self.color_counter)+'"\t: ('
+		cairo_color += str(round(float(pygtk_red/65535.),1))
+		cairo_color += (',')
+		cairo_color += str(round(float(pygtk_green/65535.),1))
+		cairo_color += (',')
+		cairo_color += str(round(float(pygtk_blue/65535.),1))
+		cairo_color += (',1.0)')
+		print cairo_color
+
+		self.color_counter += 1
+#-------------------------------------------------------------------------------
+
+	def refresh_probe(self, widget, data=None):
+		"""
+		Funzione handler per recuperare il controllo delle Probe che risultano ZOMBIE.
+		
+		:returns: *nulla*
+		"""
+		self.setup_monitor()
+#-------------------------------------------------------------------------------
+
+	def config_probe(self, widget, data=None):
+		"""
+		Funzione handler per costruire il file di configurazione con i valori scelti dall'utente.
+		
+		:returns: *nulla*
+		"""
+		Configure.ExcludeServer = (int(self.builder.get_object("MasterRadio").get_active()))
+		Configure.MaxNodes = 	  (int(self.builder.get_object("NodeScale").get_value()))
+		Configure.LocalhostOnly = (int(self.builder.get_object("LocalHostRadio").get_active()))
+		Configure.TimeStep = 	  (int(self.builder.get_object("TimeStepScale").get_value()))
+		Configure.Interval = 	  (int(self.builder.get_object("IntervalScale").get_value()))
+
+		nomeFile = (str(self.builder.get_object("NameText").get_text()))
+
+		if ('/' not in nomeFile) : Configure.SaveConfig(NewFile="./extra/UserOutput/"+nomeFile)
+		else : Configure.SaveConfig(NewFile = nomeFile)
+		
+
+		print "### Sending setup signal to Monitor..."
+		self.setup_monitor()
+
+#-------------------------------------------------------------------------------
+
+	def config_combo_probe(self, widget, data=None):
+		"""
+		Funzione handler per presentare la lista delle Probe attualmente connesse al server.
+		
+		:returns: *nulla*
+		"""
+		ProbeList = self.manager.GetProbe()
+		cbox = self.builder.get_object("ProbeBox")
+		
+		store = Gtk.ListStore(str)
+
+		token = self.manager.GetToken()
+		for item in ProbeList:
+			if (not item.startswith(token)): store.append([item])
+
+		cbox.set_model(store)
+		cell = Gtk.CellRendererText()
+		cbox.clear()
+		cbox.pack_start(cell, True)
+		cbox.add_attribute(cell, 'text', 0)
+		cbox.set_active(0)
+#-------------------------------------------------------------------------------
+
+	def run_stress(self, widget, data=None):
+		"""
+		Funzione handler per il tasto di invio stress su di una Probe.
+		
+		Raccoglie i dati dalla lista delle Probe e dai bottoni di selezione per poi spedirli al server.
+
+		:param widget: Gli passo la lista delle Probe per raccoglierne il nome selezionato.
+		:returns: *nulla*
+		"""
+		CPUValue = self.builder.get_object("StressCPU")
+		MEMValue = self.builder.get_object("StressMEM")
+		self.manager.SetStress(widget.get_active(), CPUValue.get_active(), MEMValue.get_active())
+#-------------------------------------------------------------------------------
+
+	def set_widget(self, widget, data=None):
+		"""
+		Funzione handler *generico* setta il testo al widget fornito in ingresso.
+		
+		:param widget: Widget al quale devo settare il testo, tramite la funzione set_text()
+		:returns: *nulla*
+		"""
+		if ('/' not in Configure.ConfigFile) : nomeFile = "./"+Configure.ConfigFile
+		else : nomeFile = Configure.ConfigFile
+		widget.set_text(nomeFile)
+#-------------------------------------------------------------------------------
+
+	def hide_dialog(self, widget, data=None):
+		"""
+		Funzione handler *generico* setta come nascosto un widget fornito in ingresso.
+		
+		:param widget: Widget da nascondere, tramite la funzione hide()
+		:returns: True
+		"""
+		widget.hide()
+		return True
+#-------------------------------------------------------------------------------
+
+	def about_dialog(self, widget, data=None):
+		"""
+		Funzione handler per la finestra di About. Lancia il dialog e controlla la risposta.m
+		
+		:param widget: Widget da lanciare con la funzione run()
+		:returns: *nulla*
+		"""
+		response = widget.run()
+		if (response < 0):
+			widget.hide()
+#-------------------------------------------------------------------------------
+
+	def show_dialog(self, widget, data):
+		"""
+		Funzione handler *generico* setta come visibile un widget fornito in ingresso.
+		
+		:param widget: Widget da mostrare, tramite la funzione show()
+		:returns: *nulla*
+		"""
+		widget.show()
+#-------------------------------------------------------------------------------
+
+	def start_monitoring(self, widget, data):
+		"""
+		Funzione handler per il tasto Avvia, sblocca la visualizzazione dei grafici.
+		
+		:returns: *nulla*
+		"""
+		#cambio le impostazioni dei locks
+		self.RunFlag = True
+		self.SetLocks()
+
+		print "### Sending start signal to Monitor..."
+		self.start_monitor()
+		time.sleep(Configure.Interval)
+#-------------------------------------------------------------------------------
+
+	def show_legend(self, image, data):
+		"""
+		Funzione handler per il tasto Legenda, mostra l'immagine della legenda.
+		
+		:returns: *nulla*
+		"""
+		try:
+			self.LEGTempLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got LEGlock for reading',Timeout
+			image.set_from_file(self.LEGTempLock.path)
+			self.LEGTempLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def show_cpu(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico CPU temporale, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.CPUTempLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got CPUlock for reading'
+			image.set_from_file(self.CPUTempLock.path)
+			self.CPUTempLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def show_cpu_stat(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico CPU statistica, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.CPUStatLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got CPUStatlock for reading'
+			image.set_from_file(self.CPUStatLock.path)
+			self.CPUStatLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def show_mem_stat(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico Memoria statistica, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.MEMStatLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got CPUStatlock for reading'
+			image.set_from_file(self.MEMStatLock.path)
+			self.MEMStatLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def show_swp_stat(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico Swap statistica, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.SWPStatLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got CPUStatlock for reading'
+			image.set_from_file(self.SWPStatLock.path)
+			self.SWPStatLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def show_lat_stat(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico Latenza statistica, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.LATStatLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got CPUStatlock for reading'
+			image.set_from_file(self.LATStatLock.path)
+			self.LATStatLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def show_mem(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico Memoria temporale, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.MEMTempLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got MEMlock for reading'
+			image.set_from_file(self.MEMTempLock.path)
+			self.MEMTempLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------	
+
+	def show_lat(self, image, data):
+		"""
+		Funzione handler per l'evento show del grafico Latenza temporale, aggiorna l'immagine.
+		
+		Cerca di acquisire il lock sull'immagine prima di leggerla, questo per evitare di mostrare
+		un'immagine formata a metà mentre viene scritta dal Client.
+		
+		:param image: Il widget immagine dove dev'essere mostrata.
+		:param Quiet: Tempo di attesa per evitare che si aggiornino di continuo.
+		:returns: *nulla*
+		"""
+		try:
+			self.LATTempLock.acquire(timeout=2)
+		except AlreadyLocked: pass			
+		except LockFailed: pass
+		except LockTimeout: pass
+		else:
+			#print 'Got SWPlock for reading'
+			image.set_from_file(self.LATTempLock.path)
+			self.LATTempLock.release()
+			time.sleep(Quiet)
+#-------------------------------------------------------------------------------
+
+	def menu_quit (self,widget,data):
+		"""
+		Funzione handler per il tasto Esci, scatena l'evento delete sulla main window.
+		
+		:returns: *nulla*
+		"""
+		self.window.delete_event()
+#-------------------------------------------------------------------------------		
+
+	def request_quit(self, widget, data):
+		"""
+		Funzione handler per l'evento delete della main window, mostra un messaggio di richiesta di conferma.
+		
+		:returns: ``True``  se si richiede di propagare il segnale al destroy.
+		:returns: ``False`` se non è necessario passare al destroy.
+		"""
+		MainWin = self.builder.get_object("MainWindow")
+		dialog = Gtk.MessageDialog(MainWin, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, "Sei sicuro di voler uscire?")
+        	dialog.format_secondary_text("Il segnale di chiusura verrà automaticamente propagato. ")
+        	response = dialog.run()
+        	if response == Gtk.ResponseType.OK:
+			print "### Closing up..."
+			self.manager.ShutDown()
+			dialog.destroy()
+			return(False)
+        	elif response == Gtk.ResponseType.CANCEL:
+			dialog.destroy()
+			return (True)
+#-------------------------------------------------------------------------------
+
+	def quit(self, widget):
+		"""
+		Funzione handler per il segnale destroy della main window, rompe i lock e chiude.
+		
+		:returns: *nulla*.
+		"""
+		print ">> Releasing locked resources..."
+		self.CPUTempLock.break_lock()
+		self.MEMTempLock.break_lock()
+		self.SWPTempLock.break_lock()
+		self.LATTempLock.break_lock()
+		self.LEGTempLock.break_lock()
+		self.CPUStatLock.break_lock()
+		self.MEMStatLock.break_lock()
+		self.SWPStatLock.break_lock()
+		self.LATStatLock.break_lock()
+		#sys.exit(0)
+		Gtk.main_quit()
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+
+def Main(CallMonitor, CallSetup, CallManager):
+	MainWindow(CallMonitor, CallSetup, CallManager)
+#-------------------------------------------------------------------------------
+
+if __name__ == "__main__":
+	#MainWindow()
+	print "###ATT: Interface must be started by Client"

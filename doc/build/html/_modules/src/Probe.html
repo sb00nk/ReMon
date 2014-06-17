@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>src.Probe &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for src.Probe</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: Probe</span>
+
+<span class="sd">Modulo che gestisce il codice che deve eseguire ogni nodo, ovvero la richiesta dei dati dal Server e l&#39;applicazione del monitoraggio sul sistema ospite.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">socket</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">Pyro.core</span>
+<span class="kn">import</span> <span class="nn">Pyro.errors</span>
+
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randrange</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="n">ProbeManager</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">ProbeID</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="StressCPU"><a class="viewcode-back" href="../../src.html#src.Probe.StressCPU">[docs]</a><span class="k">def</span> <span class="nf">StressCPU</span><span class="p">():</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione per mettere sotto sforzo la CPU</span>
+
+<span class="sd">	Calcola il fattoriale di un numero casuale per mostrare il consumo di CPU</span>
+
+<span class="sd">	:returns: *nothing*.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">Order</span> <span class="o">=</span> <span class="mi">1000</span>
+	<span class="n">FattNumb</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">((</span><span class="n">Order</span><span class="o">-</span><span class="mi">10</span><span class="p">),(</span><span class="n">Order</span><span class="o">+</span><span class="mi">10</span><span class="p">))</span>
+	<span class="n">acc</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">FattNumb</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="n">acc</span> <span class="o">*=</span> <span class="n">FattNumb</span>
+		<span class="n">FattNumb</span> <span class="o">-=</span> <span class="mi">1</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="StressMEM"><a class="viewcode-back" href="../../src.html#src.Probe.StressMEM">[docs]</a><span class="k">def</span> <span class="nf">StressMEM</span><span class="p">():</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione per mettere sotto sforzo la Memoria</span>
+
+<span class="sd">	Alloca N (casuale) locazioni di memoria di dimensione fissata per mostrare il consumo di Memoria</span>
+
+<span class="sd">	:returns: *nothing*.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c">#attenzione al garbage collector</span>
+	<span class="n">Order</span> <span class="o">=</span> <span class="mi">1000</span>	
+	<span class="n">Continue</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span>
+	<span class="n">MemoryList</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">Continue</span> <span class="o">!=</span> <span class="n">Order</span> <span class="o">&amp;</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">Order</span><span class="p">)):</span>
+		<span class="n">MemoryList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Order</span><span class="p">,</span><span class="n">Order</span><span class="p">)))</span>
+		<span class="n">Continue</span> <span class="o">=</span> <span class="n">randrange</span><span class="p">((</span><span class="n">Order</span><span class="o">-</span><span class="mi">25</span><span class="p">),(</span><span class="n">Order</span><span class="o">+</span><span class="mi">25</span><span class="p">))</span>
+		<span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+	<span class="c">#sarà poi utile dato che ora termina il thread?</span>
+	<span class="k">del</span> <span class="p">(</span><span class="n">MemoryList</span><span class="p">)</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="CatchCPU"><a class="viewcode-back" href="../../src.html#src.Probe.CatchCPU">[docs]</a><span class="k">def</span> <span class="nf">CatchCPU</span><span class="p">(</span><span class="n">RunNumb</span><span class="p">,</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">TimeStart</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione per catturare i dati della CPU</span>
+
+<span class="sd">	Cattura il numero delle CPUs del nodo sul quale gira, la percentuale di utilizzo media nell&#39;intervallo richiesto e li impacchetta per formare la risposta.</span>
+
+<span class="sd">	:returns: Una tupla contenente i dati rilevati nel Interval.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">ProbeManager</span><span class="o">.</span><span class="n">PutResult</span><span class="p">([</span><span class="n">ProbeID</span><span class="p">,</span> <span class="n">RunNumb</span><span class="p">,</span> <span class="s">&quot;CPU&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">NUM_CPUS</span><span class="p">),</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="n">Interval</span><span class="p">),</span> <span class="n">TimeStart</span><span class="p">])</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="CatchMEM"><a class="viewcode-back" href="../../src.html#src.Probe.CatchMEM">[docs]</a><span class="k">def</span> <span class="nf">CatchMEM</span><span class="p">(</span><span class="n">RunNumb</span><span class="p">,</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">TimeStart</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione per catturare i dati della Memoria</span>
+
+<span class="sd">	Cattura le percentuali di utilizzo della memoria e della swap medie nell&#39;intervallo richiesto e le impacchetta per formare la risposta.</span>
+
+<span class="sd">	:returns: Una tupla contenente i dati rilevati nel Interval.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c">#selettori per andare a selezionare la percentuale di memoria utilizzata nelle rispettive liste ritornate da psutil</span>
+	<span class="n">SelPerc</span> <span class="o">=</span> <span class="mi">3</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	SelMEM = 2</span>
+<span class="sd">	SelSWP = 3</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="n">Average_MEM</span><span class="p">,</span> <span class="n">Average_SWP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Interval</span><span class="p">):</span>
+		<span class="c">#deprecated version, compatibile con il laboratorio</span>
+		<span class="n">Average_MEM</span> <span class="o">+=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">phymem_usage</span><span class="p">()[</span><span class="n">SelPerc</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">Interval</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+		<span class="n">Average_SWP</span> <span class="o">+=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtmem_usage</span><span class="p">()[</span><span class="n">SelPerc</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">Interval</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+		<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">		#new version, incompatibile con il laboratorio		</span>
+<span class="sd">		Average_MEM += psutil.virtual_memory()[SelMEM]/(Interval+1)</span>
+<span class="sd">		Average_SWP += psutil.swap_memory()[SelSWP]/(Interval+1)</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="c">#deprecated version, compatibile con il laboratorio</span>
+	<span class="n">Average_MEM</span> <span class="o">+=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">phymem_usage</span><span class="p">()[</span><span class="n">SelPerc</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">Interval</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">Average_SWP</span> <span class="o">+=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtmem_usage</span><span class="p">()[</span><span class="n">SelPerc</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">Interval</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Average_MEM += psutil.virtual_memory()[SelMEM]/(Interval+1)</span>
+<span class="sd">	Average_SWP += psutil.swap_memory()[SelSWP]/(Interval+1)</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="n">ProbeManager</span><span class="o">.</span><span class="n">PutResult</span><span class="p">([</span><span class="n">ProbeID</span><span class="p">,</span> <span class="n">RunNumb</span><span class="p">,</span> <span class="s">&quot;MEM&quot;</span><span class="p">,</span> <span class="n">Average_MEM</span><span class="p">,</span> <span class="n">Average_SWP</span><span class="p">,</span> <span class="n">TimeStart</span><span class="p">])</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="Main"><a class="viewcode-back" href="../../src.html#src.Probe.Main">[docs]</a><span class="k">def</span> <span class="nf">Main</span><span class="p">():</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Funzione Main</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">global</span> <span class="n">ProbeManager</span><span class="p">,</span> <span class="n">ProbeID</span>
+	<span class="n">Pyro</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">initClient</span><span class="p">()</span>
+	<span class="n">ProbeManager</span> <span class="o">=</span> <span class="n">Pyro</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">getProxyForURI</span><span class="p">(</span><span class="s">&quot;PYRONAME://:LDServer.ProbeManager&quot;</span><span class="p">)</span> <span class="c"># Ci si connette al Server</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">### Connected to ProbeManager server</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="n">ProbeID</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()))</span> <span class="c"># Si costruisce l&#39;identificatore univoco del Worker sottoforma di stringa</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;WORKER ID: &quot;</span> <span class="o">+</span> <span class="n">ProbeID</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">&quot;Requesting acknowledgement from ProbeManager server...&quot;</span><span class="p">),</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ProbeManager</span><span class="o">.</span><span class="n">ACKNode</span><span class="p">(</span><span class="n">ProbeID</span><span class="p">)):</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">&quot;DONE.</span><span class="se">\n\n</span><span class="s">Receiving work from ProbeManager server...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">&quot;FAILED.</span><span class="se">\n\n</span><span class="s">### ERR: Connection refused from ProbeManager server </span><span class="se">\n</span><span class="s">due to MAXNODES limit reached.&quot;</span><span class="p">)</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">&quot;Hit a key to quit.&quot;</span><span class="p">)</span>
+		<span class="nb">raw_input</span><span class="p">()</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">_exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="k">while</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span>
+		<span class="c">#recupero dal server una lista di informazioni riguardanti i lavori che dovrà svolgere questa particolare probe</span>
+		<span class="c">#mappo: numero_run, time_step, time_start, cpu_stress_flag, mem_stress_flag</span>
+		<span class="n">KeyList</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;RunNumb&quot;</span><span class="p">,</span> <span class="s">&quot;Interval&quot;</span><span class="p">,</span> <span class="s">&quot;TimeStart&quot;</span><span class="p">,</span> <span class="s">&quot;CPUStressFlag&quot;</span><span class="p">,</span> <span class="s">&quot;MEMStressFlag&quot;</span><span class="p">]</span>
+		<span class="n">TestInfo</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">KeyList</span><span class="p">,</span><span class="n">ProbeManager</span><span class="o">.</span><span class="n">GetWork</span><span class="p">(</span><span class="n">ProbeID</span><span class="p">)))</span>	
+		<span class="c">#print &quot;Info ricevute dal server&quot;,ProbeManager.GetWork(ProbeID)</span>
+		<span class="c">#print &quot;Info mappate localmente&quot;,TestInfo</span>
+		<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">		if (TestInfo[&quot;RunNumb&quot;] &lt; 0):</span>
+<span class="sd">			print(&quot;KILLED.\n\n### ATT: Connection closed by ProbeManager server \nProbe terminated.&quot;)</span>
+<span class="sd">			print(&quot;Hit a key to quit.&quot;)</span>
+<span class="sd">			raw_input()</span>
+<span class="sd">			os._exit(0)</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="c">#ed in base a questi, lanciare il lavoro per questa run</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;CPUStressFlag&quot;</span><span class="p">]):</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">StressCPU</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;MEMStressFlag&quot;</span><span class="p">]):</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">StressMEM</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+		<span class="c">#nota: so esattamente quando una probe comincia e finisce un lavoro -&gt; posso misuare il delay(dal SERVER)</span>
+		<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">CatchCPU</span><span class="p">(</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;RunNumb&quot;</span><span class="p">],</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;Interval&quot;</span><span class="p">],</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;TimeStart&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+		<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">CatchMEM</span><span class="p">(</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;RunNumb&quot;</span><span class="p">],</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;Interval&quot;</span><span class="p">],</span><span class="n">TestInfo</span><span class="p">[</span><span class="s">&quot;TimeStart&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+		
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="n">Main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

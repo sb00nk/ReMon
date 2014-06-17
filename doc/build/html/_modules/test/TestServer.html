@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test.TestServer &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for test.TestServer</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># coding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Modulo che effettua il processo di Testing sul codice del progetto.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">src.Server</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">src.Configure</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="TestServer"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer">[docs]</a><span class="k">class</span> <span class="nc">TestServer</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Classe che controlla il modulo di Server</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestServer.setUp"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.setUp">[docs]</a>	<span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="s">&quot;TestProbe-0001&quot;</span> <span class="c">#nome compatibile con quelli realmente adottati</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;CPU&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mf">1.111111</span><span class="p">]</span> <span class="c">#dati compatibili con un vero result</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">]</span> <span class="c">#lo stato normale dei flag stress è False, False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">ProbeManager</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="TestServer.testObj"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testObj">[docs]</a>	<span class="k">def</span> <span class="nf">testObj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">,</span> <span class="n">ProbeManager</span><span class="p">),</span> <span class="s">&quot;M non è una istanza di ProbeManager.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestServer.testMeth"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testMeth">[docs]</a>	<span class="k">def</span> <span class="nf">testMeth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la completezza della implementazione dei metodi all&#39;interno del Modulo</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">def</span> <span class="nf">testMeth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">ShutDown</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;ShutDown&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">SetStress</span><span class="p">),</span>	    <span class="s">&quot;Metodo &quot;&quot;SetStress&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetStress</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;GetStress&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">PutResult</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;PutResult&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetWork</span><span class="p">),</span>	    <span class="s">&quot;Metodo &quot;&quot;GetWork&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetResult</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;GetResult&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetProbe</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;GetProbe&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetToken</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;GetToken&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">CheckList</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;CheckList&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">SearchPlaceholder</span><span class="p">),</span> <span class="s">&quot;Metodo &quot;&quot;SearchPlaceholder&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">ACKNode</span><span class="p">),</span> 	    <span class="s">&quot;Metodo &quot;&quot;ACKNode&quot;&quot; inesistente.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestServer.testStr"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testStr">[docs]</a>	<span class="k">def</span> <span class="nf">testStr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la correttezza del tipo immesso da una opzione</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">CheckStr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestServer.testPutGetResult"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testPutGetResult">[docs]</a>	<span class="k">def</span> <span class="nf">testPutGetResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la coerenza tra un Probe inserito e ottenuto dalla lista</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">PutResult</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetResult</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="TestServer.testNodeACK"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testNodeACK">[docs]</a>	<span class="k">def</span> <span class="nf">testNodeACK</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la corretta esclusione di un numero troppo elevato di nodi</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">SaveConfig</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">NewFile</span><span class="o">=</span><span class="s">&quot;/tmp/config.ini&quot;</span><span class="p">)</span> <span class="c"># Crea un nuovo file di configurazione temporaneo</span>
+
+		<span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># Imposta il numero massimo di nodi nel file di configurazione</span>
+		<span class="n">SaveConfig</span><span class="p">()</span> <span class="c"># Salva la configurazione</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">ACKNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">))</span>
+
+		<span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># Provo anche con una probe</span>
+		<span class="n">SaveConfig</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">ACKNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="TestServer.testSetGetStress"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testSetGetStress">[docs]</a>	<span class="k">def</span> <span class="nf">testSetGetStress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la corretta configurazione dei flag di stress</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">SaveConfig</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">NewFile</span><span class="o">=</span><span class="s">&quot;/tmp/config.ini&quot;</span><span class="p">)</span> <span class="c"># Crea un nuovo file di configurazione temporaneo</span>
+
+		<span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># Imposta il numero massimo di nodi nel file di configurazione</span>
+		<span class="n">SaveConfig</span><span class="p">()</span> <span class="c"># Salva la configurazione</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">ACKNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">SetStress</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetStress</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="TestServer.testGetCheckProbe"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.testGetCheckProbe">[docs]</a>	<span class="k">def</span> <span class="nf">testGetCheckProbe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Funzione che controlla la coerenza tra le Probes inserite e la lista ottenuta</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">SaveConfig</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">NewFile</span><span class="o">=</span><span class="s">&quot;/tmp/config.ini&quot;</span><span class="p">)</span> <span class="c"># Crea un nuovo file di configurazione temporaneo</span>
+
+		<span class="n">Configure</span><span class="o">.</span><span class="n">MaxNodes</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># Imposta il numero massimo di nodi nel file di configurazione</span>
+		<span class="n">SaveConfig</span><span class="p">()</span> <span class="c"># Salva la configurazione</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">ACKNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetProbe</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">SearchPlaceholder</span><span class="p">())</span>
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetResult</span><span class="p">()</span> <span class="c"># Incrementa il RunNumb del Server fino a rendere invalida la Probe di test</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetProbe</span><span class="p">())</span>
+
+		<span class="n">tokenProbe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetToken</span><span class="p">()</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tokenProbe</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">GetProbe</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">SearchPlaceholder</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="TestServer.tearDown"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.tearDown">[docs]</a>	<span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span>
+</div>
+<div class="viewcode-block" id="TestServer.suite"><a class="viewcode-back" href="../../test.html#test.TestServer.TestServer.suite">[docs]</a>	<span class="k">def</span> <span class="nf">suite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestLoader</span><span class="p">()</span><span class="o">.</span><span class="n">loadTestsFromTestCase</span><span class="p">(</span><span class="n">TestServer</span><span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li><a href="../../index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

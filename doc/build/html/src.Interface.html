@@ -1,0 +1,573 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Package SRC.Interface &mdash; ReMon 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="ReMon 1.0 documentation" href="index.html" />
+    <link rel="up" title="Project Packages and Modules" href="modules.html" />
+    <link rel="next" title="Package TEST" href="test.html" />
+    <link rel="prev" title="Package SRC" href="src.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             accesskey="I">indice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li class="right" >
+          <a href="test.html" title="Package TEST"
+             accesskey="N">successivo</a> |</li>
+        <li class="right" >
+          <a href="src.html" title="Package SRC"
+             accesskey="P">precedente</a> |</li>
+        <li><a href="index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" accesskey="U">Project Packages and Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="package-src-interface">
+<h1>Package SRC.Interface<a class="headerlink" href="#package-src-interface" title="link permanente per questa intestazione">¶</a></h1>
+<p>Questo <cite>package</cite> contiene il codice per la gestione della parte grafica del progetto.</p>
+<div class="section" id="module-src.Interface">
+<span id="interface-modulo"></span><h2><a class="reference internal" href="#module-Interface" title="Interface"><tt class="xref py py-mod docutils literal"><span class="pre">Interface</span></tt></a> Modulo<a class="headerlink" href="#module-src.Interface" title="link permanente per questa intestazione">¶</a></h2>
+<span class="target" id="module-Interface"></span><p>Modulo per gestire l&#8217;interfaccia grafica del monitor, collega i segnali agli handler e trasmette le modifiche operate dall&#8217;utente ai moduli Client e Server.</p>
+<dl class="function">
+<dt id="src.Interface.Main">
+<tt class="descclassname">src.Interface.</tt><tt class="descname">Main</tt><big>(</big><em>CallMonitor</em>, <em>CallSetup</em>, <em>CallManager</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#Main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.Main" title="link permanente per questa definizione">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="src.Interface.MainWindow">
+<em class="property">class </em><tt class="descclassname">src.Interface.</tt><tt class="descname">MainWindow</tt><big>(</big><em>CallMonitor</em>, <em>CallSetup</em>, <em>CallManager</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow" title="link permanente per questa definizione">¶</a></dt>
+<dd><dl class="method">
+<dt id="src.Interface.MainWindow.BuildFilePath">
+<tt class="descname">BuildFilePath</tt><big>(</big><em>ThisRun</em>, <em>FileName</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.BuildFilePath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.BuildFilePath" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>In base al flag self.RunFlag decide come costruire il percorso del file desiderato.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>FileName</strong> &#8211; Nome del file desiderato.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body">Il percorso completo del file da visualizzare nella GUI.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.SetLocks">
+<tt class="descname">SetLocks</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.SetLocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.SetLocks" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione di appoggio per settare i FileLock su tutti i grafici utilizzati.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.about_dialog">
+<tt class="descname">about_dialog</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="headerlink" href="#src.Interface.MainWindow.about_dialog" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per la finestra di About. Lancia il dialog e controlla la risposta.m</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>widget</strong> &#8211; Widget da lanciare con la funzione run()</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.config_combo_probe">
+<tt class="descname">config_combo_probe</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.config_combo_probe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.config_combo_probe" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per presentare la lista delle Probe attualmente connesse al server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.config_probe">
+<tt class="descname">config_probe</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.config_probe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.config_probe" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per costruire il file di configurazione con i valori scelti dall&#8217;utente.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.get_color">
+<tt class="descname">get_color</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="headerlink" href="#src.Interface.MainWindow.get_color" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per recuperare un colore nel formato utilizzato da cairoplot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.hide_dialog">
+<tt class="descname">hide_dialog</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.hide_dialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.hide_dialog" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler <em>generico</em> setta come nascosto un widget fornito in ingresso.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>widget</strong> &#8211; Widget da nascondere, tramite la funzione hide()</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body">True</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.menu_quit">
+<tt class="descname">menu_quit</tt><big>(</big><em>widget</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.menu_quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.menu_quit" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per il tasto Esci, scatena l&#8217;evento delete sulla main window.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.open_doc">
+<tt class="descname">open_doc</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.open_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.open_doc" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per aprire la documentazione.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.quit">
+<tt class="descname">quit</tt><big>(</big><em>widget</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.quit" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per il segnale destroy della main window, rompe i lock e chiude.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.refresh_probe">
+<tt class="descname">refresh_probe</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="headerlink" href="#src.Interface.MainWindow.refresh_probe" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per recuperare il controllo delle Probe che risultano ZOMBIE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.request_quit">
+<tt class="descname">request_quit</tt><big>(</big><em>widget</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.request_quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.request_quit" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento delete della main window, mostra un messaggio di richiesta di conferma.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt>  se si richiede di propagare il segnale al destroy.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><tt class="docutils literal"><span class="pre">False</span></tt> se non è necessario passare al destroy.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.run_stress">
+<tt class="descname">run_stress</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.run_stress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.run_stress" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per il tasto di invio stress su di una Probe.</p>
+<p>Raccoglie i dati dalla lista delle Probe e dai bottoni di selezione per poi spedirli al server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>widget</strong> &#8211; Gli passo la lista delle Probe per raccoglierne il nome selezionato.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.save_graph">
+<tt class="descname">save_graph</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.save_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.save_graph" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per il salvataggio dei grafici.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.set_widget">
+<tt class="descname">set_widget</tt><big>(</big><em>widget</em>, <em>data=None</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.set_widget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.set_widget" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler <em>generico</em> setta il testo al widget fornito in ingresso.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>widget</strong> &#8211; Widget al quale devo settare il testo, tramite la funzione set_text()</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_cpu">
+<tt class="descname">show_cpu</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_cpu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_cpu" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico CPU temporale, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_cpu_stat">
+<tt class="descname">show_cpu_stat</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_cpu_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_cpu_stat" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico CPU statistica, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_dialog">
+<tt class="descname">show_dialog</tt><big>(</big><em>widget</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_dialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_dialog" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler <em>generico</em> setta come visibile un widget fornito in ingresso.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>widget</strong> &#8211; Widget da mostrare, tramite la funzione show()</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_lat">
+<tt class="descname">show_lat</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_lat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_lat" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico Latenza temporale, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_lat_stat">
+<tt class="descname">show_lat_stat</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_lat_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_lat_stat" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico Latenza statistica, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_legend">
+<tt class="descname">show_legend</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_legend" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per il tasto Legenda, mostra l&#8217;immagine della legenda.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_mem">
+<tt class="descname">show_mem</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_mem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_mem" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico Memoria temporale, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_mem_stat">
+<tt class="descname">show_mem_stat</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_mem_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_mem_stat" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico Memoria statistica, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.show_swp_stat">
+<tt class="descname">show_swp_stat</tt><big>(</big><em>image</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.show_swp_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.show_swp_stat" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per l&#8217;evento show del grafico Swap statistica, aggiorna l&#8217;immagine.</p>
+<p>Cerca di acquisire il lock sull&#8217;immagine prima di leggerla, questo per evitare di mostrare
+un&#8217;immagine formata a metà mentre viene scritta dal Client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> &#8211; Il widget immagine dove dev&#8217;essere mostrata.</li>
+<li><strong>Quiet</strong> &#8211; Tempo di attesa per evitare che si aggiornino di continuo.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"><em>nulla</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.Interface.MainWindow.start_monitoring">
+<tt class="descname">start_monitoring</tt><big>(</big><em>widget</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/src/Interface.html#MainWindow.start_monitoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.Interface.MainWindow.start_monitoring" title="link permanente per questa definizione">¶</a></dt>
+<dd><p>Funzione handler per il tasto Avvia, sblocca la visualizzazione dei grafici.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ritorna:</th><td class="field-body"><em>nulla</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Tabella dei contenuti</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Package SRC.Interface</a><ul>
+<li><a class="reference internal" href="#module-src.Interface"><tt class="docutils literal"><span class="pre">Interface</span></tt> Modulo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Argomento precedente</h4>
+  <p class="topless"><a href="src.html"
+                        title="capitolo precedente">Package SRC</a></p>
+  <h4>Argomento successivo</h4>
+  <p class="topless"><a href="test.html"
+                        title="capitolo successivo">Package TEST</a></p>
+  <h3>Questa pagina</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/src.Interface.txt"
+           rel="nofollow">Mostra sorgente</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigazione</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Indice generale"
+             >indice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >moduli</a> |</li>
+        <li class="right" >
+          <a href="test.html" title="Package TEST"
+             >successivo</a> |</li>
+        <li class="right" >
+          <a href="src.html" title="Package SRC"
+             >precedente</a> |</li>
+        <li><a href="index.html">ReMon 1.0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >Project Packages and Modules</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Andrea Uguzzoni.
+      Creato con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

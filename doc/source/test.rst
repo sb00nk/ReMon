@@ -1,0 +1,30 @@
+Package TEST
+=============
+
+Questo `package` contiene la suite di testing del programma, ovvero l'esecuzione dei controlli per poter verificare il corretto funzionamento di tutti i moduli del programma stesso.
+
+
+:mod:`TestClient` Modulo
+------------------------
+
+.. automodule:: test.TestClient
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`TestConfigure` Modulo
+---------------------------
+
+.. automodule:: test.TestConfigure
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`TestServer` Modulo
+------------------------
+
+.. automodule:: test.TestServer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

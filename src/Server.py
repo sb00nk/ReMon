@@ -34,7 +34,7 @@ class ProbeManager(Pyro.core.ObjBase):
 
 	"""
 	Classe ProbeManager che contiene i metodi necessari alla gestione delle comunicazioni tra le Probes ed il Client.
-	
+
 	In particolare le Probes richiedono i parametri per effettuare le misure al Server, e gli forniscono i risultati.
  	Quando il Client lo richiede, gli vengono spediti tutti i risultati in possesso del Server, che li azzera localmente e ricomincia.
 
@@ -44,14 +44,14 @@ class ProbeManager(Pyro.core.ObjBase):
 
 		print "### Starting the ProbeManager..."
 		Pyro.core.ObjBase.__init__(self)
-	
+
 		self.ProbeList = []
 		self.AliveProbe = {}
 		self.StressWork = {}
 		self.ResultList=[]
 		self.Token = "ZOMBIE-"
 		self.KillProbe = -10
-	
+
 	def ShutDown(self):
 		"""
 		Metodo per terminare in automatico il ProbeManager.
@@ -275,11 +275,11 @@ def Main():
 
 		os.system("grep -q \"Linguaggi Dinamici\" /etc/hosts && sudo cp /etc/hosts.bak /etc/hosts || sudo cp /etc/hosts /etc/hosts.bak")
 		os.system("echo \"$(sed 's/^127\.0\..*\('\"$(hostname)\"'\|localhost\)/#\\0/g' /etc/hosts)\\n\\n###  lines below added automatically by a script  ###\\n\\n$(hostname -i)\\t$(hostname)\\n$(hostname -i)\\tlocalhost\" > /etc/hosts")
-		
+
 	IPAddr = str(subprocess.check_output("hostname -I", shell=True)) # Metodo per ottenere l'indirizzo IP della scheda di rete, senza l'utilizzo di ifconfig
 	threading.Thread(target=Pyro.naming.main, args=[['-n', IPAddr, '-v']]).start() # Lancia il NameServer in ascolto sull'indirizzo della scheda di rete
 
-        Pyro.core.initServer() # Inizializza il server PyRO
+	Pyro.core.initServer() # Inizializza il server PyRO
 
 	while(True):
 		try:
@@ -288,7 +288,7 @@ def Main():
 		except:	pass
 
 	d = Pyro.core.Daemon(host=IPAddr)
-        d.useNameServer(ns)
+	d.useNameServer(ns)
 
 	try: ns.createGroup(":LDServer")
 	except NamingError: pass
@@ -298,10 +298,10 @@ def Main():
 
 	w = ProbeManager()
 
-        d.connect(w, ':LDServer.ProbeManager')
+	d.connect(w, ':LDServer.ProbeManager')
 	print "### ProbeManager server ready."
 
-        try:
+	try:
 		threading.Thread(target=d.requestLoop()).start() # Il server rimane in ascolto all'infinito
 	except KeyboardInterrupt:
 		print "### Shutting down daemon, disconnecting objects..."

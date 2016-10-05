@@ -96,7 +96,8 @@ def CatchCPU(RunNumb, Interval, TimeStart):
 	:param TimeStart: Tempo di avvio di questo campionamento, lo restituisco in uscita per poter calcolare la latenza.
 	:returns: Una tupla contenente i dati rilevati nel Interval.
 	"""
-	ProbeManager.PutResult([ProbeID, RunNumb, "CPU", float(psutil.NUM_CPUS), psutil.cpu_percent(interval=Interval), TimeStart])
+	#ProbeManager.PutResult([ProbeID, RunNumb, "CPU", float(psutil.NUM_CPUS), psutil.cpu_percent(interval=Interval), TimeStart])
+	ProbeManager.PutResult([ProbeID, RunNumb, "CPU", float(psutil.cpu_count()), psutil.cpu_percent(interval=Interval), TimeStart])
 
 #-------------------------------------------------------------------------------
 
@@ -118,12 +119,14 @@ def CatchMEM(RunNumb, Interval, TimeStart):
 
 	Average_MEM, Average_SWP = 0, 0
 	for i in range(Interval):
-		Average_MEM += psutil.phymem_usage()[SelPerc]/(Interval+1)
-		Average_SWP += psutil.virtmem_usage()[SelPerc]/(Interval+1)
+		#Average_MEM += psutil.phymem_usage()[SelPerc]/(Interval+1)
+		#Average_SWP += psutil.virtmem_usage()[SelPerc]/(Interval+1)
+		Average_MEM += psutil.virtual_memory().percent/(Interval+1)
+		Average_SWP += psutil.swap_memory().percent/(Interval+1)
 		time.sleep(1)
 
-	Average_MEM += psutil.phymem_usage()[SelPerc]/(Interval+1)
-	Average_SWP += psutil.virtmem_usage()[SelPerc]/(Interval+1)
+	Average_MEM += psutil.virtual_memory().percent/(Interval+1)
+	Average_SWP += psutil.swap_memory().percent/(Interval+1)
 	ProbeManager.PutResult([ProbeID, RunNumb, "MEM", Average_MEM, Average_SWP, TimeStart])
 #-------------------------------------------------------------------------------
 

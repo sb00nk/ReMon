@@ -25,12 +25,12 @@ from collections import defaultdict
 import inspect
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile(inspect.currentframe()))[0],"../extra/modules/cairoplot")))
 if cmd_subfolder not in sys.path:
-    sys.path.insert(0, cmd_subfolder)
+	sys.path.insert(0, cmd_subfolder)
 import cairoplot
 
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile(inspect.currentframe()))[0],"../extra/modules/lockfile")))
 if cmd_subfolder not in sys.path:
-    sys.path.insert(0, cmd_subfolder)
+	sys.path.insert(0, cmd_subfolder)
 from lockfile import FileLock,LockTimeout
 
 #cerco di importare fabric, se non riesco lo importo dai miei moduli
@@ -40,7 +40,7 @@ try:
 except ImportError:
 	cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile(inspect.currentframe()))[0],"../extra/modules/fabric")))
 	if cmd_subfolder not in sys.path:
-	    sys.path.insert(0, cmd_subfolder)
+		sys.path.insert(0, cmd_subfolder)
 finally:
 	from fabric.api import *
 	from fabric.network import disconnect_all
@@ -64,7 +64,7 @@ class Client():
 
 		print "### Setting up Probes..."
 		self.SetupMonitoring()
-		
+
 		# if per i settaggi del test, coprono anche una possibile "chiamata irregolare"
 		if Manager is not None :
 			print "### Starting GUI..."
@@ -96,7 +96,7 @@ args=(self.RemoteStartMonitoring, self.SetupMonitoring, self.ProbeManager)).star
 		global Interval
 		FileName = 'extra/MonitorGraph/'+FileName
 		FakeValues = range(len(self.ProbeList))
-	
+
 		#ogni volta cerca di acquisire il lock per creare una nuova immagine, se non riesce, rompe il lock
 		TempLock = FileLock(FileName)
 		try:
@@ -112,7 +112,7 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 	def MakeGraph(self, Data, FileName):
 		"""
 		Funzione che produce un grafico temporale.
-	
+
 		:param Data: Serie di dati da dover graficare.
 		:param FileName: Nome file da assegnare al grafico prodotto.
 		:returns: *nulla*
@@ -124,7 +124,7 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 		FileName = 'extra/MonitorGraph/'+FileName
 
 		for x in range((TimeStep-1)*Interval,-1,-Interval): Markers.append(str(x))
-		
+
 		#ogni volta cerca di acquisire il lock per creare una nuova immagine, se non riesce, rompe il lock
 		TempLock = FileLock(FileName)
 		try:
@@ -140,7 +140,7 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 	def MakeGraphPercent(self, Data, FileName):
 		"""
 		Funzione che produce un grafico percentuale sotto forma di pieplot.
-	
+
 		:param Data: Dato da dover graficare.
 		:param FileName: Nome file da assegnare al grafico prodotto.
 		:returns: *nulla*
@@ -173,7 +173,7 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 	def MakeGraphTop3(self, Data, FileName):
 		"""
 		Funzione che produce un grafico dei nodi a maggiore latenza sotto forma di istogram.
-	
+
 		:param Data: Serie di dati da dover graficare.
 		:param FileName: Nome file da assegnare al grafico prodotto.
 		:returns: *nulla*
@@ -181,7 +181,7 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 		"""
 		global Interval
 		FileName = 'extra/MonitorGraph/'+FileName
-		
+
 		ordered = sorted(Data.iteritems(), key=operator.itemgetter(1), reverse=True)
 		first3 = []
 		colors3 = []
@@ -218,7 +218,7 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 			self.ProbeList = []
 			self.NumbNodes = 0
 		self.NumbProbe = len(self.ProbeList)
-	
+
 		if(Configure.LocalhostOnly):
 			for i in range(self.NumbProbe,self.NumbNodes):
 				print ">> Start Probe #",i
@@ -235,14 +235,14 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 				self.AskPass = False
 
 			ClientID = str(socket.gethostname()).upper()
-			
+
 			hosts = ",".join([ line.rstrip() for (i,line) in enumerate(open("./extra/fabric/hosts.txt"))
-				if (i <= self.NumbNodes
-				and not(line.startswith(ClientID)) 
-				and not any(item.startswith(line.rstrip()) for item in self.ProbeList)) ])
+			                   if (i <= self.NumbNodes
+			                       and not(line.startswith(ClientID)) 
+			                       and not any(item.startswith(line.rstrip()) for item in self.ProbeList)) ])
 
 			# Vengono ottenuti i primi "MaxNodes" dalla lista degli hosts per fabric, escludendo l'host Client
-				
+
 			print ">> Loaded host list from Fabric :", hosts
 			if (len(hosts) >= 1):
 				os.system("cd ./extra/fabric; fab --hide ALL --hosts " + hosts + " -u " + self.user + " -p " + self.passwd + " load_probes > /dev/null")
@@ -282,10 +282,10 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 
 		#carico la lista con i miei colori, per essere sicuro di associare sempre lo stesso colore ad una certa probe
 		MyColors = [	"orange",	"lime",		"cyan",		"maroon",	"navy",		"yellow",
-				"magenta",	"green",	"red",		"blue",		"black",	"gray",
-				"custom-0",	"custom-1",	"custom-2",	"custom-3",	"custom-4",	"custom-5",
-				"custom-6",	"custom-7",	"custom-8",	"custom-9",	"custom-10",	"custom-11",
-				"custom-12",	"custom-13",	"custom-14",	"custom-15",	"custom-16",	"custom-17"	]
+		                    "magenta",	"green",	"red",		"blue",		"black",	"gray",
+		                    "custom-0",	"custom-1",	"custom-2",	"custom-3",	"custom-4",	"custom-5",
+		                    "custom-6",	"custom-7",	"custom-8",	"custom-9",	"custom-10",	"custom-11",
+		                    "custom-12",	"custom-13",	"custom-14",	"custom-15",	"custom-16",	"custom-17"	]
 
 		CPUStat,MEMStat,SWPStat = [],[],[]
 
@@ -314,13 +314,13 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 				self.MakeLegend("legenda.png")
 				#print ">> Collecting results from Probes..."
 				Results = self.GatherResults()
-			
+
 				#selettori per andare a prelevare i valori giusti nella lista che rappresenta i risultati
 				SelProbe,SelTag,SelValue1,SelValue2,SelValue3=0,2,3,4,5
 				for num in range(self.NumbProbe):
 					if (self.ProbeList[num].startswith(self.Token)):
 						LATStat[self.ProbeList[num]] += Interval
-						
+
 					for element in ifilter(lambda ele:ele[SelProbe]==self.ProbeList[num], Results):
 						if (element[SelTag]=="CPU"):
 							#trattamento dati per grafico temporale CPU
@@ -349,26 +349,26 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 				self.MakeGraph(self.MEMData, "mem.png")
 				self.MakeGraph(self.SWPData, "swp.png")
 				self.MakeGraph(self.LATData, "lat.png")
-	
+
 				#le statistiche considerano solo i dati istantanei
 				#se non sono presenti è meglio evitare di invocare le funzioni
 				#creazione Grafici Percentuali
 				#print "**CPUStat**"
 				#print CPUStat,self.NumbProbe,self.NumbPlaceHolder
 				if (len(CPUStat) >= self.NumbProbe-self.NumbPlaceHolder
-					and len(CPUStat) > 0): 
+				    and len(CPUStat) > 0): 
 					self.MakeGraphPercent(numpy.mean(CPUStat), "cpu_stat.png")
 					CPUStat = []
 				#print "**MEMStat**"
 				#print MEMStat
 				if (len(MEMStat) >= self.NumbProbe - self.NumbPlaceHolder
-					and len(MEMStat) > 0):
+				    and len(MEMStat) > 0):
 					self.MakeGraphPercent(numpy.mean(MEMStat), "mem_stat.png")
 					MEMStat = []
 				#print "**SWPStat**"
 				#print SWPStat
 				if (len(SWPStat) >= self.NumbProbe - self.NumbPlaceHolder
-					and len(SWPStat) > 0):
+				    and len(SWPStat) > 0):
 					self.MakeGraphPercent(numpy.mean(SWPStat), "swp_stat.png")
 					SWPStat = []
 
@@ -379,10 +379,10 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 				if (self.NumbProbe == 0):
 					sys.stdout.flush()
 					raise ConnectionClosedError
-			
+
 				#sleep alla fine				
 				time.sleep(Interval)
-		
+
 			except IndexError:
 				pass
 
@@ -391,18 +391,18 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 
 				#pulizia delle macchine Probe
 				if(not Configure.LocalhostOnly):
-				
+
 					ClientID = str(socket.gethostname()).upper()
 					hosts = ",".join([ line.rstrip() for (i,line) in enumerate(open("./extra/fabric/hosts.txt"))
-					if (i <= self.NumbNodes
-					and not(line.startswith(ClientID)) 
-					and not any(item.startswith(line.rstrip()) for item in self.ProbeList)) ])
-				
+					                   if (i <= self.NumbNodes
+					                       and not(line.startswith(ClientID)) 
+					                       and not any(item.startswith(line.rstrip()) for item in self.ProbeList)) ])
+
 					print ">> Loaded host for remote cleaning :", hosts
 					if (len(hosts) >= 1):
 						os.system("cd ./extra/fabric; fab --hide ALL --hosts " + hosts + " -u " + self.user + " -p " + self.passwd + " clean > /dev/null")
 					disconnect_all()
-				
+
 				#pulizia della macchina Client
 				print "### Cleaning up locally..."
 				os.system("find ./extra/MonitorGraph/ -type f -not -name 'def*' | xargs rm -f")
@@ -450,7 +450,7 @@ def Main():
 	global ConfigFile
 	ConfigFile = CheckStr(options.FILE)
 	LocalHost = options.localhost
-	
+
 	Configure.LoadConfig(ConfigFile) # Carico la configurazione da file
 
 	if(ConfigFile==""):
@@ -488,7 +488,7 @@ def Main():
 				break
 			except:
 				pass
-		
+
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------

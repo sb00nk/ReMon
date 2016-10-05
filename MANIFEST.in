@@ -1,0 +1,6 @@
+recursive-include doc *
+recursive-include extra *
+include config.ini
+include README.rst
+include ReMon.pdf
+

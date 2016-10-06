@@ -11,6 +11,9 @@ Modulo per gestire l'interfaccia grafica del monitor, collega i segnali agli han
 import sys,os
 import time
 import webbrowser
+import gi
+gi.require_version("Gtk", "3.0")
+
 #package used for GTK+ 3 applications in Python
 from gi.repository import Gtk, GdkPixbuf
 import Client

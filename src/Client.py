@@ -31,7 +31,7 @@ import cairoplot
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile(inspect.currentframe()))[0],"../extra/modules/lockfile")))
 if cmd_subfolder not in sys.path:
 	sys.path.insert(0, cmd_subfolder)
-from lockfile import FileLock,LockTimeout
+from lockfile import FileLock,LockTimeout,NotLocked
 
 #cerco di importare fabric, se non riesco lo importo dai miei moduli
 try:
@@ -386,6 +386,9 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 			except IndexError:
 				pass
 
+			except NotLocked:
+				pass
+
 			except ConnectionClosedError:
 				print "### Cleaning and Closing..."
 
@@ -408,9 +411,6 @@ axis=False, grid=False, series_legend=True,series_colors=self.Colors)
 				os.system("find ./extra/MonitorGraph/ -type f -not -name 'def*' | xargs rm -f")
 				print "### Client terminated by ProbeManager server... SHUTDOWN."
 				os._exit(0)
-
-			except Exception:
-				raise ConnectionClosedError
 
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------

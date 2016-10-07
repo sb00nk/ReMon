@@ -20,8 +20,13 @@ RRRRRRRR     RRRRRRR    eeeeeeeeeeeeee  MMMMMMMM               MMMMMMMM   oooooo
 
 Istruzioni:
 
-aprire una shell bash, e posizionare il prompt all'interno di questa cartella.
+Aprire una shell bash, e posizionare il prompt all'interno della cartella ReMon (la stessa che contiene questo file)
 Eseguire le seguenti azioni:
+
+- Eseguire il setup del programma con i seguenti comandi:
+
+	python setup.py build
+	sudo python setup.py install
 
 - Verificare che il file extra/fabric/hosts.txt sia compilato con la lista dei nomi di sistema dei
 computer che si desidera monitorare, un singolo nome per riga, niente punteggiatura.
